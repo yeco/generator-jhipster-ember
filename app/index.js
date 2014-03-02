@@ -69,7 +69,7 @@ JhipsterGenerator.prototype.askFor = function askFor() {
                     name: 'Yes, with HazelCast (distributed cache, for multiple nodes)'
                 }
             ],
-            default: 1
+            default: 0
         },
         {
             type: 'list',
@@ -101,7 +101,7 @@ JhipsterGenerator.prototype.askFor = function askFor() {
                     name: 'PostgreSQL'
                 }
             ],
-            default: 0
+            default: 1
         },
         {
             type: 'list',
@@ -183,7 +183,6 @@ JhipsterGenerator.prototype.app = function app() {
     var javaDir = 'src/main/java/' + packageFolder + '/';
 
     this.template('src/main/java/package/_Application.java', javaDir + '/Application.java');
-    this.template('src/main/java/package/_ApplicationWebXml.java', javaDir + '/ApplicationWebXml.java');
 
     this.template('src/main/java/package/config/_package-info.java', javaDir + 'config/package-info.java');
     this.template('src/main/java/package/config/_AsyncConfiguration.java', javaDir + 'config/AsyncConfiguration.java');
@@ -193,7 +192,6 @@ JhipsterGenerator.prototype.app = function app() {
     this.template('src/main/java/package/config/_LocaleConfiguration.java', javaDir + 'config/LocaleConfiguration.java');
     this.template('src/main/java/package/config/_MailConfiguration.java', javaDir + 'config/MailConfiguration.java');
     this.template('src/main/java/package/config/_MetricsConfiguration.java', javaDir + 'config/MetricsConfiguration.java');
-    this.template('src/main/java/package/config/_SecurityConfiguration.java', javaDir + 'config/SecurityConfiguration.java');
     this.template('src/main/java/package/config/_ThymeleafConfiguration.java', javaDir + 'config/ThymeleafConfiguration.java');
     this.template('src/main/java/package/config/_WebConfigurer.java', javaDir + 'config/WebConfigurer.java');
 
@@ -221,7 +219,6 @@ JhipsterGenerator.prototype.app = function app() {
     this.template('src/main/java/package/domain/_package-info.java', javaDir + 'domain/package-info.java');
     this.template('src/main/java/package/domain/_Authority.java', javaDir + 'domain/Authority.java');
     this.template('src/main/java/package/domain/_PersistentAuditEvent.java', javaDir + 'domain/PersistentAuditEvent.java');
-    this.template('src/main/java/package/domain/_PersistentToken.java', javaDir + 'domain/PersistentToken.java');
     this.template('src/main/java/package/domain/_User.java', javaDir + 'domain/User.java');
     this.template('src/main/java/package/domain/util/_CustomLocalDateSerializer.java', javaDir + 'domain/util/CustomLocalDateSerializer.java');
 
@@ -229,23 +226,17 @@ JhipsterGenerator.prototype.app = function app() {
     this.template('src/main/java/package/repository/_AuthorityRepository.java', javaDir + 'repository/AuthorityRepository.java');
     this.template('src/main/java/package/repository/_CustomAuditEventRepository.java', javaDir + 'repository/CustomAuditEventRepository.java');
     this.template('src/main/java/package/repository/_UserRepository.java', javaDir + 'repository/UserRepository.java');
-    this.template('src/main/java/package/repository/_PersistentTokenRepository.java', javaDir + 'repository/PersistentTokenRepository.java');
     this.template('src/main/java/package/repository/_PersistenceAuditEventRepository.java', javaDir + 'repository/PersistenceAuditEventRepository.java');
 
     this.template('src/main/java/package/security/_package-info.java', javaDir + 'security/package-info.java');
-    this.template('src/main/java/package/security/_AjaxAuthenticationFailureHandler.java', javaDir + 'security/AjaxAuthenticationFailureHandler.java');
-    this.template('src/main/java/package/security/_AjaxAuthenticationSuccessHandler.java', javaDir + 'security/AjaxAuthenticationSuccessHandler.java');
-    this.template('src/main/java/package/security/_AjaxLogoutSuccessHandler.java', javaDir + 'security/AjaxLogoutSuccessHandler.java');
     this.template('src/main/java/package/security/_AuthoritiesConstants.java', javaDir + 'security/AuthoritiesConstants.java');
-    this.template('src/main/java/package/security/_CustomPersistentRememberMeServices.java', javaDir + 'security/CustomPersistentRememberMeServices.java');
     this.template('src/main/java/package/security/_Http401UnauthorizedEntryPoint.java', javaDir + 'security/Http401UnauthorizedEntryPoint.java');
     this.template('src/main/java/package/security/_SecurityUtils.java', javaDir + 'security/SecurityUtils.java');
     this.template('src/main/java/package/security/_UserDetailsService.java', javaDir + 'security/UserDetailsService.java');
 
     this.template('src/main/java/package/service/_package-info.java', javaDir + 'service/package-info.java');
-    this.template('src/main/java/package/service/_AuditEventService.java', javaDir + 'service/AuditEventService.java');
-    this.template('src/main/java/package/service/_UserService.java', javaDir + 'service/UserService.java');
     this.template('src/main/java/package/service/_MailService.java', javaDir + 'service/MailService.java');
+        this.template('src/main/java/package/service/_AuditEventService.java', javaDir + 'service/AuditEventService.java');
 
     this.template('src/main/java/package/web/filter/_package-info.java', javaDir + 'web/filter/package-info.java');
     this.template('src/main/java/package/web/filter/_CachingHttpHeadersFilter.java', javaDir + 'web/filter/CachingHttpHeadersFilter.java');
@@ -265,10 +256,8 @@ JhipsterGenerator.prototype.app = function app() {
     this.template('src/main/java/package/web/rest/dto/_LoggerDTO.java', javaDir + 'web/rest/dto/LoggerDTO.java');
     this.template('src/main/java/package/web/rest/dto/_UserDTO.java', javaDir + 'web/rest/dto/UserDTO.java');
     this.template('src/main/java/package/web/rest/_package-info.java', javaDir + 'web/rest/package-info.java');
-    this.template('src/main/java/package/web/rest/_AccountResource.java', javaDir + 'web/rest/AccountResource.java');
     this.template('src/main/java/package/web/rest/_AuditResource.java', javaDir + 'web/rest/AuditResource.java');
     this.template('src/main/java/package/web/rest/_LogsResource.java', javaDir + 'web/rest/LogsResource.java');
-    this.template('src/main/java/package/web/rest/_UserResource.java', javaDir + 'web/rest/UserResource.java');
 
     this.template('src/main/java/package/web/servlet/_package-info.java', javaDir + 'web/servlet/package-info.java');
     this.template('src/main/java/package/web/servlet/_HealthCheckServlet.java', javaDir + 'web/servlet/HealthCheckServlet.java');

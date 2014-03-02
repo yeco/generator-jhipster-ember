@@ -52,9 +52,4 @@ public class User implements Serializable {
             inverseJoinColumns = {@JoinColumn(name = "name", referencedColumnName = "name")})<% if (hibernateCache != 'no') { %>
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)<% } %>
     private Set<Authority> authorities;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "user")<% if (hibernateCache != 'no') { %>
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)<% } %>
-    private Set<PersistentToken> persistentTokens;
 }
