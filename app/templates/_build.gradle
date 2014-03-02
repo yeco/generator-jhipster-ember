@@ -77,13 +77,13 @@ dependencies {
     compile("org.hibernate:hibernate-ehcache:+")<% } %>
     compile("org.hibernate:hibernate-validator:+")
     compile("org.liquibase:liquibase-core:3.1.1")
-    runtime("com.mattbertolini:liquibase-slf4j:1.2.1")
     compile("org.springframework.boot:spring-boot-starter-web:1.0.0.RC3")
     compile("org.springframework.boot:spring-boot-starter-actuator:1.0.0.RC3")
     compile("org.springframework.boot:spring-boot-starter-security:1.0.0.RC3")
     compile("org.springframework.boot:spring-boot-starter-data-jpa:1.0.0.RC3")
     compile("org.springframework.boot:spring-boot-starter-thymeleaf:1.0.0.RC3")
     compile("org.springframework:spring-context-support:4.0.1.RELEASE")
+    compile("org.projectlombok:lombok:1.12.2")
     // Database dependencies
     <% if (devDatabaseType == 'mysql' || prodDatabaseType == 'mysql') { %>
     compile("mysql:mysql-connector-java:+")
@@ -93,6 +93,7 @@ dependencies {
     compile("org.hsqldb:hsqldb:+")
     <% } %>
     compile("org.springsource.loaded:springloaded:+")
+    runtime("com.mattbertolini:liquibase-slf4j:1.2.1")
     // Test dependencies
     testCompile("com.jayway.awaitility:awaitility:1.4.0")
     testCompile("com.jayway.jsonpath:json-path:0.9.1")
