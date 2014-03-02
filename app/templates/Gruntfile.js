@@ -11,7 +11,7 @@ var proxySnippet = require('grunt-connect-proxy/lib/utils').proxyRequest;
 
 module.exports = function (grunt) {
   require('load-grunt-tasks')(grunt);
-  require('time-grunt')(grunt); 
+  require('time-grunt')(grunt);
 
   grunt.initConfig({
     yeoman: {
@@ -19,11 +19,6 @@ module.exports = function (grunt) {
       app: require('./bower.json').appPath || 'app',
       dist: 'src/main/webapp/dist'
     },
-    watch: {<% if (useCompass) { %>
-      compass: {
-        files: ['src/main/scss/{,*/}*.{scss,sass}'],
-        tasks: ['compass:server', 'autoprefixer']
-      },<% } %>
     styles: {
         files: ['src/main/webapp/styles/{,*/}*.css'],
         tasks: ['copy:styles', 'autoprefixer']
@@ -38,7 +33,6 @@ module.exports = function (grunt) {
           '{.tmp/,}src/main/webapp/scripts/{,*/}*.js',
           'src/main/webapp/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
         ]
-      }
     },
     autoprefixer: {
       options: ['last 1 version'],
@@ -150,28 +144,7 @@ module.exports = function (grunt) {
           ext: '.js'
         }]
       }
-    },<% if (useCompass) { %>
-    compass: {
-      options: {
-        sassDir: 'src/main/scss',
-        cssDir: 'src/main/webapp/styles',
-        generatedImagesDir: '.tmp/images/generated',
-        imagesDir: 'src/main/webapp/images',
-        javascriptsDir: 'src/main/webapp/scripts',
-        fontsDir: 'src/main/webapp/styles/fonts',
-        importPath: 'src/main/webapp/bower_components',
-        httpImagesPath: '/images',
-        httpGeneratedImagesPath: '/images/generated',
-        httpFontsPath: '/styles/fonts',
-        relativeAssets: false
-      },
-      dist: {},
-      server: {
-        options: {
-          debugInfo: true
-        }
-      }
-    },<% } %>
+    },
     // not used since Uglify task does concat,
     // but still available if needed
     /*concat: {
@@ -287,16 +260,13 @@ module.exports = function (grunt) {
       }
     },
     concurrent: {
-      server: [<% if (useCompass) { %>
-        'compass:server',<% } %>
+      server:
         'copy:styles'
       ],
-      test: [<% if (useCompass) { %>
-        'compass',<% } %>
+      test:
         'copy:styles'
       ],
-      dist: [<% if (useCompass) { %>
-        'compass:dist',<% } %>
+      dist:
         'copy:styles',
         'imagemin',
         'svgmin',

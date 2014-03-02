@@ -1,0 +1,102 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            url 'http://repo.springsource.org/milestone/'
+        }
+    }
+    dependencies {
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.0.0.RC3'
+        classpath 'org.eclipse.jgit:org.eclipse.jgit:2.3.1.201302201838-r'
+        classpath 'com.pieceof8.gradle:gradle-snapshot-plugin:1.0.0'
+    }
+}
+
+apply plugin: 'idea'
+apply plugin: 'java'
+apply plugin: 'snapshot'
+apply plugin: 'spring-boot'
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+jar {
+    baseName = '<%= _.slugify(baseName) %>'
+}
+
+springBoot {
+    backupSource = false
+}
+
+repositories {
+    maven {
+        url 'http://repo.spring.io/milestone'
+    }
+    maven {
+        url 'http://repo.spring.io/snapshot'
+    }
+    mavenCentral()
+}
+
+def versions = [<% if (hibernateCache == 'hazelcast') { %>
+    hazelcast: '3.1.5',<% } %>
+    codahale_metrics: '3.0.2',
+    jackson: '2.3.0'
+]
+
+dependencies {
+    compile("com.codahale.metrics:metrics-graphite:<%= _.unescape('\$\{versions.codahale_metrics}')%>")
+    compile("com.codahale.metrics:metrics-jvm:<%= _.unescape('\$\{versions.codahale_metrics}')%>")
+    compile("com.codahale.metrics:metrics-servlet:<%= _.unescape('\$\{versions.codahale_metrics}')%>")
+    compile("com.codahale.metrics:metrics-servlets:<%= _.unescape('\$\{versions.codahale_metrics}')%>")
+    <% if (hibernateCache == 'ehcache') { %>
+    compile("com.codahale.metrics:metrics-ehcache:<%= _.unescape('\$\{versions.codahale_metrics}')%>")
+    <% } %>
+    compile("com.fasterxml.jackson.datatype:jackson-datatype-hppc:<%= _.unescape('\$\{versions.jackson}')%>")
+    compile("com.fasterxml.jackson.datatype:jackson-datatype-joda:<%= _.unescape('\$\{versions.jackson}')%>")
+    <% if (hibernateCache == 'hazelcast') { %>
+    compile("com.hazelcast:hazelcast:<%= _.unescape('\$\{versions.hazelcast}')%>")
+    compile("com.hazelcast:hazelcast-hibernate4:<%= _.unescape('\$\{versions.hazelcast}')%>")
+    compile("com.hazelcast:hazelcast-spring:<%= _.unescape('\$\{versions.hazelcast}')%>")
+    compile("com.hazelcast:hazelcast:<%= _.unescape('\$\{versions.hazelcast}')%>")
+    <% } %>
+    <% if (clusteredHttpSession == 'hazelcast' && hibernateCache != 'hazelcast') { %>
+    compile("com.hazelcast:hazelcast:<%= _.unescape('\$\{versions.hazelcast}')%>")
+    <% } %>
+    <% if (clusteredHttpSession == 'hazelcast') { %>
+    compile("com.hazelcast:hazelcast-wm:<%= _.unescape('\$\{hazelcast.version}')%>")
+    <% } %>
+    compile("com.ryantenney.metrics:metrics-spring:3.0.0-RC4")
+    compile("com.zaxxer:HikariCP:1.3.0")
+    compile("commons-lang:commons-lang:2.6")
+    compile("commons-io:commons-io:2.4")
+    compile("javax.inject:javax.inject:1")
+    compile("joda-time:joda-time:2.3")
+    compile("org.apache.geronimo.javamail:geronimo-javamail_1.4_mail:1.8.3")
+    compile("org.jadira.usertype:usertype.core:3.1.0.CR10")<% if (hibernateCache == 'ehcache') { %>
+    compile("org.hibernate:hibernate-ehcache:+")<% } %>
+    compile("org.hibernate:hibernate-validator:+")
+    compile("org.liquibase:liquibase-core:3.1.1")
+    runtime("com.mattbertolini:liquibase-slf4j:1.2.1")
+    compile("org.springframework.boot:spring-boot-starter-web:1.0.0.RC3")
+    compile("org.springframework.boot:spring-boot-starter-actuator:1.0.0.RC3")
+    compile("org.springframework.boot:spring-boot-starter-security:1.0.0.RC3")
+    compile("org.springframework.boot:spring-boot-starter-data-jpa:1.0.0.RC3")
+    compile("org.springframework.boot:spring-boot-starter-thymeleaf:1.0.0.RC3")
+    compile("org.springframework:spring-context-support:4.0.1.RELEASE")
+    // Database dependencies
+    <% if (devDatabaseType == 'mysql' || prodDatabaseType == 'mysql') { %>
+    compile("mysql:mysql-connector-java:+")
+    <% } %><% if (devDatabaseType == 'postgresql' || prodDatabaseType == 'postgresql') { %>
+    compile("org.postgresql:postgresql:9.3-1100-jdbc41")
+    <% } %><% if (devDatabaseType != 'mysql' && devDatabaseType != 'postgresql') { %>
+    compile("org.hsqldb:hsqldb:+")
+    <% } %>
+    compile("org.springsource.loaded:springloaded:+")
+    // Test dependencies
+    testCompile("com.jayway.awaitility:awaitility:1.4.0")
+    testCompile("com.jayway.jsonpath:json-path:0.9.1")
+    testCompile("com.h2database:h2:+")
+    testCompile("org.springframework.boot:spring-boot-starter-test:1.0.0.RC3")
+    testCompile("org.assertj:assertj-core:1.5.0")
+}

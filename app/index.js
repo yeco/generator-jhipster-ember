@@ -32,25 +32,25 @@ JhipsterGenerator.prototype.askFor = function askFor() {
         '           \\_|_| /_/--\\  \\_\\/  /_/--\\     |_|_/ |_|__  \\_\\/  _)_)       \n' +
         '\n'));
 
-    console.log('\nWelcome to the Jhipster Generator\n\n');
+    console.log('\nWelcome to the Jhipster NG Generator\n\n');
 
     var prompts = [
         {
             type: 'input',
             name: 'baseName',
-            message: '(1/8) What is the base name of your application?',
-            default: 'jhipster'
+            message: '(1/6) What is the base name of your application?',
+            default: 'jhipster-ng'
         },
         {
             type: 'input',
             name: 'packageName',
-            message: '(2/8) What is your default Java package name?',
+            message: '(2/6) What is your default Java package name?',
             default: 'com.mycompany.myapp'
         },
         {
             type: 'list',
             name: 'hibernateCache',
-            message: '(3/8) Do you want to use Hibernate 2nd level cache?',
+            message: '(3/6) Do you want to use Hibernate 2nd level cache?',
             choices: [
                 {
                     value: 'no',
@@ -70,7 +70,7 @@ JhipsterGenerator.prototype.askFor = function askFor() {
         {
             type: 'list',
             name: 'clusteredHttpSession',
-            message: '(4/8) Do you want to use clustered HTTP sessions?',
+            message: '(4/6) Do you want to use clustered HTTP sessions?',
             choices: [
                 {
                     value: 'no',
@@ -85,24 +85,8 @@ JhipsterGenerator.prototype.askFor = function askFor() {
         },
         {
             type: 'list',
-            name: 'websocket',
-            message: '(5/8) Do you want to use WebSockets?',
-            choices: [
-                {
-                    value: 'no',
-                    name: 'No'
-                },
-                {
-                    value: 'atmosphere',
-                    name: 'Yes, with Atmosphere'
-                }
-            ],
-            default: 0
-        },
-        {
-            type: 'list',
             name: 'prodDatabaseType',
-            message: '(6/8) Which *production* database would you like to use?',
+            message: '(5/6) Which *production* database would you like to use?',
             choices: [
                 {
                     value: 'mysql',
@@ -118,7 +102,7 @@ JhipsterGenerator.prototype.askFor = function askFor() {
         {
             type: 'list',
             name: 'devDatabaseType',
-            message: '(7/8) Which *development* database would you like to use?',
+            message: '(6/6) Which *development* database would you like to use?',
             choices: [
                 {
                     value: 'hsqldbMemory',
@@ -134,12 +118,6 @@ JhipsterGenerator.prototype.askFor = function askFor() {
                 }
             ],
             default: 0
-        },
-        {
-            type: 'confirm',
-            name: 'useCompass',
-            message: '(8/8) Would you like to use the Compass CSS Authoring Framework?',
-            default: false
         }
     ];
 
@@ -150,10 +128,8 @@ JhipsterGenerator.prototype.askFor = function askFor() {
         this.baseName = props.baseName;
         this.hibernateCache = props.hibernateCache;
         this.clusteredHttpSession = props.clusteredHttpSession;
-        this.websocket = props.websocket;
         this.devDatabaseType = props.devDatabaseType;
         this.prodDatabaseType = props.prodDatabaseType;
-        this.useCompass = props.useCompass;
 
         cb();
     }.bind(this));
@@ -167,10 +143,10 @@ JhipsterGenerator.prototype.app = function app() {
     this.template('bowerrc', '.bowerrc');
     this.template('Gruntfile.js', 'Gruntfile.js');
     this.copy('gitignore', '.gitignore');
-    this.copy('spring_loaded/springloaded-1.1.5-dev.jar', 'spring_loaded/springloaded-1.1.5-dev.jar');
+    this.copy('spring_loaded/springloaded-1.2.0-dev.jar', 'spring_loaded/springloaded-1.2.0-dev.jar');
 
     var packageFolder = this.packageName.replace(/\./g, '/');
-    this.template('_pom.xml', 'pom.xml');
+    this.template('_build.gradle', 'build.gradle');
 
     // Create Java resource files
     var resourceDir = 'src/main/resources/';
@@ -293,15 +269,6 @@ JhipsterGenerator.prototype.app = function app() {
     this.template('src/main/java/package/web/servlet/_package-info.java', javaDir + 'web/servlet/package-info.java');
     this.template('src/main/java/package/web/servlet/_HealthCheckServlet.java', javaDir + 'web/servlet/HealthCheckServlet.java');
 
-    if (this.websocket == 'atmosphere') {
-        this.template('src/main/java/package/web/websocket/_package-info.java', javaDir + 'web/websocket/package-info.java');
-        this.template('src/main/java/package/web/websocket/_ActivityService.java', javaDir + 'web/websocket/ActivityService.java');
-        this.template('src/main/java/package/web/websocket/_TrackerService.java', javaDir + 'web/websocket/TrackerService.java');
-        this.template('src/main/java/package/web/websocket/dto/_package-info.java', javaDir + 'web/websocket/dto/package-info.java');
-        this.template('src/main/java/package/web/websocket/dto/_ActivityDTO.java', javaDir + 'web/websocket/dto/ActivityDTO.java');
-        this.template('src/main/java/package/web/websocket/dto/_ActivityDTOJacksonDecoder.java', javaDir + 'web/websocket/dto/ActivityDTOJacksonDecoder.java');
-    }
-
     // Create Test Java files
     var testDir = 'src/test/java/' + packageFolder + '/';
     var testResourceDir = 'src/test/resources/';
@@ -322,19 +289,15 @@ JhipsterGenerator.prototype.app = function app() {
     var webappDir = 'src/main/webapp/';
     this.mkdir(webappDir);
 
-    // normal CSS or SCSS?
-    if (this.useCompass) {
-        this.copy('src/main/scss/main.scss', 'src/main/scss/main.scss');
-    } else {
-        this.copy('src/main/webapp/images/glyphicons-halflings.png', 'src/main/webapp/images/glyphicons-halflings.png');
-        this.copy('src/main/webapp/images/glyphicons-halflings-white.png', 'src/main/webapp/images/glyphicons-halflings-white.png');
-        this.copy('src/main/webapp/styles/bootstrap.css', 'src/main/webapp/styles/bootstrap.css');
-        this.copy('src/main/webapp/styles/main.css', 'src/main/webapp/styles/main.css');
-        this.copy('src/main/webapp/fonts/glyphicons-halflings-regular.eot', 'src/main/webapp/fonts/glyphicons-halflings-regular.eot');
-        this.copy('src/main/webapp/fonts/glyphicons-halflings-regular.svg', 'src/main/webapp/fonts/glyphicons-halflings-regular.svg');
-        this.copy('src/main/webapp/fonts/glyphicons-halflings-regular.ttf', 'src/main/webapp/fonts/glyphicons-halflings-regular.ttf');
-        this.copy('src/main/webapp/fonts/glyphicons-halflings-regular.woff', 'src/main/webapp/fonts/glyphicons-halflings-regular.woff');
-    }
+
+    this.copy('src/main/webapp/images/glyphicons-halflings.png', 'src/main/webapp/images/glyphicons-halflings.png');
+    this.copy('src/main/webapp/images/glyphicons-halflings-white.png', 'src/main/webapp/images/glyphicons-halflings-white.png');
+    this.copy('src/main/webapp/styles/bootstrap.css', 'src/main/webapp/styles/bootstrap.css');
+    this.copy('src/main/webapp/styles/main.css', 'src/main/webapp/styles/main.css');
+    this.copy('src/main/webapp/fonts/glyphicons-halflings-regular.eot', 'src/main/webapp/fonts/glyphicons-halflings-regular.eot');
+    this.copy('src/main/webapp/fonts/glyphicons-halflings-regular.svg', 'src/main/webapp/fonts/glyphicons-halflings-regular.svg');
+    this.copy('src/main/webapp/fonts/glyphicons-halflings-regular.ttf', 'src/main/webapp/fonts/glyphicons-halflings-regular.ttf');
+    this.copy('src/main/webapp/fonts/glyphicons-halflings-regular.woff', 'src/main/webapp/fonts/glyphicons-halflings-regular.woff');
 
     // HTML5 BoilerPlate
     this.copy(webappDir + 'favicon.ico', webappDir + 'favicon.ico');
@@ -355,9 +318,6 @@ JhipsterGenerator.prototype.app = function app() {
     this.copy(webappDir + '/views/password.html', webappDir + 'views/password.html');
     this.copy(webappDir + '/views/settings.html', webappDir + 'views/settings.html');
     this.copy(webappDir + '/views/sessions.html', webappDir + 'views/sessions.html');
-    if (this.websocket == 'atmosphere') {
-        this.copy(webappDir + '/views/tracker.html', webappDir + 'views/tracker.html');
-    }
     this.template(webappDir + '/views/_metrics.html', webappDir + 'views/metrics.html');
 
     // Index page
@@ -374,9 +334,6 @@ JhipsterGenerator.prototype.app = function app() {
     // Create Test Javascript files
     var testJsDir = 'src/test/javascript/';
     this.copy('src/test/javascript/karma.conf.js', testJsDir + 'karma.conf.js');
-    if (this.websocket == 'atmosphere') {
-        this.copy('src/test/javascript/mock/atmosphere.mock.js', testJsDir + 'mock/atmosphere.mock.js');
-    }
     this.template('src/test/javascript/spec/_controllersSpec.js', testJsDir + 'spec/controllersSpec.js');
     this.template('src/test/javascript/spec/_servicesSpec.js', testJsDir + 'spec/servicesSpec.js');
 
@@ -410,12 +367,6 @@ JhipsterGenerator.prototype.app = function app() {
         'scripts/services.js',
         'scripts/directives.js'];
 
-    if (this.websocket == 'atmosphere') {
-        indexScripts = indexScripts.concat([
-            'bower_components/atmosphere/atmosphere.js',
-            'bower_components/jquery-atmosphere/jquery.atmosphere.js']);
-    }   
-
     indexScripts = indexScripts.concat([
         'bower_components/sass-bootstrap/js/affix.js',
         'bower_components/sass-bootstrap/js/alert.js',
@@ -428,7 +379,7 @@ JhipsterGenerator.prototype.app = function app() {
         'bower_components/sass-bootstrap/js/carousel.js',
         'bower_components/sass-bootstrap/js/scrollspy.js',
         'bower_components/sass-bootstrap/js/collapse.js',
-        'bower_components/sass-bootstrap/js/tab.js']);    
+        'bower_components/sass-bootstrap/js/tab.js']);
 
     this.indexFile = this.appendScripts(this.indexFile, 'scripts/scripts.js', indexScripts);
     this.write(webappDir + 'index.html', this.indexFile);
