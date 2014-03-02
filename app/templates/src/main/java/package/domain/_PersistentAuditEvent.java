@@ -1,7 +1,9 @@
 package <%=packageName%>.domain;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;<% if (hibernateCache != 'no') { %>
 import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.CacheConcurrencyStrategy;<% } %>
 import org.hibernate.annotations.Type;
 import org.joda.time.LocalDateTime;
 
@@ -10,23 +12,17 @@ import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-
 /**
  * Persist AuditEvent managed by the Spring Boot actuator
+ *
  * @see org.springframework.boot.actuate.audit.AuditEvent
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "T_PERSISTENT_AUDIT_EVENT")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class PersistentAuditEvent  {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "event_id")
-    private long id;
-
+@Table(name = "persistent_audit_events")<% if (hibernateCache != 'no') { %>
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)<% } %>
+public class PersistentAuditEvent extends Base {
     @NotNull
     @Column(name = "principal")
     private String principal;
@@ -40,8 +36,8 @@ public class PersistentAuditEvent  {
 
 
     @ElementCollection
-    @MapKeyColumn(name="name")
-    @Column(name="value")
-    @CollectionTable(name="T_PERSISTENT_AUDIT_EVENT_DATA", joinColumns=@JoinColumn(name="event_id"))
+    @MapKeyColumn(name = "name")
+    @Column(name = "value")
+    @CollectionTable(name = "persistent_audit_event_data", joinColumns = @JoinColumn(name = "audit_event_id"))
     private Map<String, String> data = new HashMap<>();
 }

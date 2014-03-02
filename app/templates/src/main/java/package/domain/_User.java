@@ -1,33 +1,25 @@
 package <%=packageName%>.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;<% if (hibernateCache != 'no') { %>
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;<% } %>
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.validator.constraints.Email;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
-import java.util.Set;
-
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import java.util.Set;<% if (hibernateCache != 'no') { %>
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;<% } %>
 
 /**
  * A user.
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "T_USER")<% if (hibernateCache != 'no') { %>
+@Table(name = "users")<% if (hibernateCache != 'no') { %>
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)<% } %>
-public class User implements Serializable {
-
-    @NotNull
-    @Size(min = 0, max = 50)
-    @Id
-    private String login;
-
+public class User extends Base {
     @JsonIgnore
     @Size(min = 0, max = 100)
     private String password;
@@ -47,9 +39,9 @@ public class User implements Serializable {
     @JsonIgnore
     @ManyToMany
     @JoinTable(
-            name = "T_USER_AUTHORITY",
-            joinColumns = {@JoinColumn(name = "login", referencedColumnName = "login")},
-            inverseJoinColumns = {@JoinColumn(name = "name", referencedColumnName = "name")})<% if (hibernateCache != 'no') { %>
+            name = "users_authorities",
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "authority_id")})<% if (hibernateCache != 'no') { %>
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)<% } %>
     private Set<Authority> authorities;
 }

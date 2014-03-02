@@ -220,6 +220,7 @@ JhipsterGenerator.prototype.app = function app() {
     this.template('src/main/java/package/domain/_Authority.java', javaDir + 'domain/Authority.java');
     this.template('src/main/java/package/domain/_PersistentAuditEvent.java', javaDir + 'domain/PersistentAuditEvent.java');
     this.template('src/main/java/package/domain/_User.java', javaDir + 'domain/User.java');
+    this.template('src/main/java/package/domain/_Base.java', javaDir + 'domain/Base.java');
     this.template('src/main/java/package/domain/util/_CustomLocalDateSerializer.java', javaDir + 'domain/util/CustomLocalDateSerializer.java');
 
     this.template('src/main/java/package/repository/_package-info.java', javaDir + 'repository/package-info.java');
@@ -230,7 +231,6 @@ JhipsterGenerator.prototype.app = function app() {
 
     this.template('src/main/java/package/security/_package-info.java', javaDir + 'security/package-info.java');
     this.template('src/main/java/package/security/_AuthoritiesConstants.java', javaDir + 'security/AuthoritiesConstants.java');
-    this.template('src/main/java/package/security/_Http401UnauthorizedEntryPoint.java', javaDir + 'security/Http401UnauthorizedEntryPoint.java');
     this.template('src/main/java/package/security/_SecurityUtils.java', javaDir + 'security/SecurityUtils.java');
     this.template('src/main/java/package/security/_UserDetailsService.java', javaDir + 'security/UserDetailsService.java');
 

@@ -7,8 +7,8 @@
         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
     <changeSet id="1" author="jhipster">
-        <createTable tableName="T_USER">
-            <column name="login" type="varchar(50)">
+        <createTable tableName="users">
+            <column name="id" type="UUID">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="password" type="varchar(100)"/>
@@ -17,19 +17,20 @@
             <column name="email" type="varchar(100)"/>
         </createTable>
 
-        <createTable tableName="T_AUTHORITY">
-            <column name="name" type="varchar(255)">
+        <createTable tableName="authorities">
+            <column name="id" type="UUID">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-        </createTable>
-
-        <createTable tableName="T_USER_AUTHORITY">
-            <column name="login" type="varchar(50)"/>
             <column name="name" type="varchar(255)"/>
         </createTable>
 
-        <createTable tableName="T_PERSISTENT_AUDIT_EVENT">
-            <column name="event_id" type="bigint" autoIncrement="true">
+        <createTable tableName="users_authorities">
+            <column name="user_id" type="UUID"/>
+            <column name="authority_id" type="UUID"/>
+        </createTable>
+
+        <createTable tableName="audit_events">
+            <column name="id" type="UUID">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="principal" type="varchar(50)"/>
@@ -37,58 +38,42 @@
             <column name="event_type" type="varchar(50)"/>
         </createTable>
 
-        <createTable tableName="T_PERSISTENT_AUDIT_EVENT_DATA">
-            <column name="event_id" type="bigint"/>
+        <createTable tableName="audit_event_data">
+            <column name="audit_event_id" type="UUID"/>
             <column name="name" type="varchar(50)"/>
             <column name="value" type="varchar(255)"/>
         </createTable>
 
         <createIndex indexName="idx_user_authority"
-                     tableName="T_USER_AUTHORITY"
+                     tableName="users_authorities"
                      unique="true">
-            <column name="login" type="varchar(50)"/>
-            <column name="name" type="varchar(255)"/>
+            <column name="user_id" type="UUID"/>
+            <column name="authority_id" type="UUID"/>
         </createIndex>
 
-        <createIndex indexName="idx_persistent_audit_event"
-                     tableName="T_PERSISTENT_AUDIT_EVENT"
+        <createIndex indexName="idx_audit_event"
+                     tableName="audit_events"
                      unique="false">
             <column name="principal" type="varchar(50)"/>
             <column name="event_date" type="timestamp"/>
         </createIndex>
 
         <createIndex indexName="idx_persistent_audit_event_data"
-                     tableName="T_PERSISTENT_AUDIT_EVENT_DATA"
+                     tableName="audit_event_data"
                      unique="false">
-            <column name="event_id" type="bigint"/>
+            <column name="audit_event_id" type="UUID"/>
         </createIndex>
 
-        <addForeignKeyConstraint baseColumnNames="name"
-                                 baseTableName="T_USER_AUTHORITY"
+        <addForeignKeyConstraint baseColumnNames="authority_id"
+                                 baseTableName="users_authorities"
                                  constraintName="fk_authority_name"
-                                 referencedColumnNames="name"
-                                 referencedTableName="T_AUTHORITY"/>
+                                 referencedColumnNames="id"
+                                 referencedTableName="authorities"/>
 
-        <addForeignKeyConstraint baseColumnNames="login"
-                                 baseTableName="T_USER_AUTHORITY"
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="users_authorities"
                                  constraintName="fk_user_login"
-                                 referencedColumnNames="login"
-                                 referencedTableName="T_USER"/>
-
-        <loadData encoding="UTF-8"
-                  file="config/liquibase/users.csv"
-                  separator=";"
-                  tableName="T_USER"/>
-
-        <loadData encoding="UTF-8"
-                  file="config/liquibase/authorities.csv"
-                  separator=";"
-                  tableName="T_AUTHORITY"/>
-
-        <loadData encoding="UTF-8"
-                  file="config/liquibase/users_authorities.csv"
-                  separator=";"
-                  tableName="T_USER_AUTHORITY"/>
-
+                                 referencedColumnNames="id"
+                                 referencedTableName="users"/>
     </changeSet>
 </databaseChangeLog>
