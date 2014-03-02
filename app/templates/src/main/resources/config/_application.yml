@@ -8,6 +8,9 @@ endpoints.jolokia.enabled: false
 # security configuration (this key should be unique for your application, and kept secret)
 jhipster.security.rememberme.key: <%= baseName %>
 
+server:
+  port: 9990
+
 async:
     corePoolSize: 2
     maxPoolSize: 50

@@ -9,9 +9,13 @@ var JhipsterGenerator = module.exports = function JhipsterGenerator(args, option
     yeoman.generators.Base.apply(this, arguments);
 
     this.on('end', function () {
-        this.installDependencies({ skipInstall: options['skip-install'] });
+        this.installDependencies({
+            skipInstall: options['skip-install'],
+            callback: function() {
+                this.spawnCommand('gradle', ['wrapper']);
+            }.bind(this)
+        });
     });
-
     this.pkg = JSON.parse(this.readFileAsString(path.join(__dirname, '../package.json')));
 };
 
@@ -141,7 +145,7 @@ JhipsterGenerator.prototype.app = function app() {
     this.template('_bower.json', 'bower.json');
     this.template('_README.md', 'README.md');
     this.template('bowerrc', '.bowerrc');
-    this.template('Gruntfile.js', 'Gruntfile.js');
+    this.copy('Gruntfile.js', 'Gruntfile.js');
     this.copy('gitignore', '.gitignore');
     this.copy('spring_loaded/springloaded-1.2.0-dev.jar', 'spring_loaded/springloaded-1.2.0-dev.jar');
 
@@ -273,31 +277,23 @@ JhipsterGenerator.prototype.app = function app() {
     var testDir = 'src/test/java/' + packageFolder + '/';
     var testResourceDir = 'src/test/resources/';
     this.mkdir(testDir);
-    this.template('src/test/java/package/service/_UserServiceTest.java', testDir + 'service/UserServiceTest.java');
-    this.template('src/test/java/package/web/rest/_AccountResourceTest.java', testDir + 'web/rest/AccountResourceTest.java');
-    this.template('src/test/java/package/web/rest/_TestUtil.java', testDir + 'web/rest/TestUtil.java');
-    this.template('src/test/java/package/web/rest/_UserResourceTest.java', testDir + 'web/rest/UserResourceTest.java');
 
-    this.template(testResourceDir + 'config/_application.yml', testResourceDir + 'config/application.yml');
-    this.template(testResourceDir + '_logback.xml', testResourceDir + 'logback.xml');
+    //this.template(testResourceDir + 'config/_application.yml', testResourceDir + 'config/application.yml');
+    //this.template(testResourceDir + '_logback.xml', testResourceDir + 'logback.xml');
 
-    if (this.hibernateCache == "ehcache") {
-        this.template(testResourceDir + '_ehcache.xml', testResourceDir + 'ehcache.xml');
-    }
+    //if (this.hibernateCache == "ehcache") {
+    //    this.template(testResourceDir + '_ehcache.xml', testResourceDir + 'ehcache.xml');
+    //}
 
     // Create Webapp
-    var webappDir = 'src/main/webapp/';
+    var webappDir = 'src/main/resources/public/';
     this.mkdir(webappDir);
 
-
-    this.copy('src/main/webapp/images/glyphicons-halflings.png', 'src/main/webapp/images/glyphicons-halflings.png');
-    this.copy('src/main/webapp/images/glyphicons-halflings-white.png', 'src/main/webapp/images/glyphicons-halflings-white.png');
-    this.copy('src/main/webapp/styles/bootstrap.css', 'src/main/webapp/styles/bootstrap.css');
-    this.copy('src/main/webapp/styles/main.css', 'src/main/webapp/styles/main.css');
-    this.copy('src/main/webapp/fonts/glyphicons-halflings-regular.eot', 'src/main/webapp/fonts/glyphicons-halflings-regular.eot');
-    this.copy('src/main/webapp/fonts/glyphicons-halflings-regular.svg', 'src/main/webapp/fonts/glyphicons-halflings-regular.svg');
-    this.copy('src/main/webapp/fonts/glyphicons-halflings-regular.ttf', 'src/main/webapp/fonts/glyphicons-halflings-regular.ttf');
-    this.copy('src/main/webapp/fonts/glyphicons-halflings-regular.woff', 'src/main/webapp/fonts/glyphicons-halflings-regular.woff');
+    this.copy(webappDir + 'styles/main.less', webappDir + 'styles/main.less');
+    this.copy(webappDir + 'fonts/glyphicons-halflings-regular.eot', webappDir + 'fonts/glyphicons-halflings-regular.eot');
+    this.copy(webappDir + 'fonts/glyphicons-halflings-regular.svg', webappDir + 'fonts/glyphicons-halflings-regular.svg');
+    this.copy(webappDir + 'fonts/glyphicons-halflings-regular.ttf', webappDir + 'fonts/glyphicons-halflings-regular.ttf');
+    this.copy(webappDir + 'fonts/glyphicons-halflings-regular.woff', webappDir + 'fonts/glyphicons-halflings-regular.woff');
 
     // HTML5 BoilerPlate
     this.copy(webappDir + 'favicon.ico', webappDir + 'favicon.ico');
@@ -309,79 +305,21 @@ JhipsterGenerator.prototype.app = function app() {
     this.template(webappDir + '/i18n/_fr.json', webappDir + 'i18n/fr.json');
     this.template(webappDir + '/i18n/_de.json', webappDir + 'i18n/de.json');
 
-    // Angular JS views
-    this.angularAppName = _s.camelize(this.baseName) + 'App';
-    this.copy(webappDir + '/views/audits.html', webappDir + 'views/audits.html');
-    this.copy(webappDir + '/views/main.html', webappDir + 'views/main.html');
-    this.copy(webappDir + '/views/login.html', webappDir + 'views/login.html');
-    this.copy(webappDir + '/views/logs.html', webappDir + 'views/logs.html');
-    this.copy(webappDir + '/views/password.html', webappDir + 'views/password.html');
-    this.copy(webappDir + '/views/settings.html', webappDir + 'views/settings.html');
-    this.copy(webappDir + '/views/sessions.html', webappDir + 'views/sessions.html');
-    this.template(webappDir + '/views/_metrics.html', webappDir + 'views/metrics.html');
-
     // Index page
     this.indexFile = this.readFileAsString(path.join(this.sourceRoot(), webappDir + '_index.html'));
     this.indexFile = this.engine(this.indexFile, this);
 
     // JavaScript
-    this.copy(webappDir + 'scripts/http-auth-interceptor.js', webappDir + 'scripts/http-auth-interceptor.js');
     this.template(webappDir + 'scripts/_app.js', webappDir + 'scripts/app.js');
-    this.template(webappDir + 'scripts/_controllers.js', webappDir + 'scripts/controllers.js');
-    this.template(webappDir + 'scripts/_services.js', webappDir + 'scripts/services.js');
-    this.template(webappDir + 'scripts/_directives.js', webappDir + 'scripts/directives.js');
+    this.template(webappDir + 'scripts/_router.js', webappDir + 'scripts/router.js');
+    this.template(webappDir + 'scripts/_store.js', webappDir + 'scripts/store.js');
+
+    this.copy(webappDir + 'templates/index.hbs', webappDir + 'templates/index.hbs');
 
     // Create Test Javascript files
     var testJsDir = 'src/test/javascript/';
-    this.copy('src/test/javascript/karma.conf.js', testJsDir + 'karma.conf.js');
-    this.template('src/test/javascript/spec/_controllersSpec.js', testJsDir + 'spec/controllersSpec.js');
-    this.template('src/test/javascript/spec/_servicesSpec.js', testJsDir + 'spec/servicesSpec.js');
+    this.mkdir(testJsDir);
 
-    // CSS
-    this.copy(webappDir + 'styles/documentation.css', webappDir + 'styles/documentation.css');
-    this.copy(webappDir + 'styles/famfamfam-flags.css', webappDir + 'styles/famfamfam-flags.css');
-
-    // Images
-    this.copy(webappDir + 'images/development_ribbon.png', webappDir + 'images/development_ribbon.png');
-    this.copy(webappDir + 'images/hipster.jpg', webappDir + 'images/hipster.jpg');
-    this.copy(webappDir + 'images/famfamfam-flags.png', webappDir + 'images/famfamfam-flags.png');
-
-    var indexScripts = [
-        'bower_components/modernizr/modernizr.js',
-
-        'bower_components/jquery/jquery.js',
-        'bower_components/angular/angular.js',
-        'bower_components/angular-route/angular-route.js',
-        'bower_components/angular-resource/angular-resource.js',
-        'bower_components/angular-cookies/angular-cookies.js',
-        'bower_components/angular-sanitize/angular-sanitize.js',
-        'bower_components/angular-translate/angular-translate.js',
-        'bower_components/angular-translate-storage-cookie/angular-translate-storage-cookie.js',
-        'bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.js',
-        'bower_components/angular-dynamic-locale/src/tmhDinamicLocale.js',
-
-        'scripts/http-auth-interceptor.js',
-
-        'scripts/app.js',
-        'scripts/controllers.js',
-        'scripts/services.js',
-        'scripts/directives.js'];
-
-    indexScripts = indexScripts.concat([
-        'bower_components/sass-bootstrap/js/affix.js',
-        'bower_components/sass-bootstrap/js/alert.js',
-        'bower_components/sass-bootstrap/js/dropdown.js',
-        'bower_components/sass-bootstrap/js/tooltip.js',
-        'bower_components/sass-bootstrap/js/modal.js',
-        'bower_components/sass-bootstrap/js/transition.js',
-        'bower_components/sass-bootstrap/js/button.js',
-        'bower_components/sass-bootstrap/js/popover.js',
-        'bower_components/sass-bootstrap/js/carousel.js',
-        'bower_components/sass-bootstrap/js/scrollspy.js',
-        'bower_components/sass-bootstrap/js/collapse.js',
-        'bower_components/sass-bootstrap/js/tab.js']);
-
-    this.indexFile = this.appendScripts(this.indexFile, 'scripts/scripts.js', indexScripts);
     this.write(webappDir + 'index.html', this.indexFile);
 
     this.config.set('baseName', this.baseName);

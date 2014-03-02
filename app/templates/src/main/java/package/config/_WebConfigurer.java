@@ -157,7 +157,6 @@ public class WebConfigurer implements ServletContextInitializer {
         staticResourcesProductionFilter.addMappingForUrlPatterns(disps, true, "/fonts/*");
         staticResourcesProductionFilter.addMappingForUrlPatterns(disps, true, "/scripts/*");
         staticResourcesProductionFilter.addMappingForUrlPatterns(disps, true, "/styles/*");
-        staticResourcesProductionFilter.addMappingForUrlPatterns(disps, true, "/views/*");
         staticResourcesProductionFilter.setAsyncSupported(true);
     }
 

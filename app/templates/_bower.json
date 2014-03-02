@@ -2,25 +2,19 @@
   "name": "<%= _.camelize(baseName) %>",
   "version": "0.0.0",
   "dependencies": {
-    "atmosphere": "2.1.2",
-    "jquery-atmosphere": "2.1.2",
-    "sass-bootstrap": "3.0.2",
-    "modernizr": "2.7.1",
-    "jquery": "2.0.3",
-    "angular": "1.2.13",
-    "json3": "3.3.0",
-    "angular-route": "1.2.13",
-    "angular-resource": "1.2.13",
-    "angular-cookies": "1.2.13",
-    "angular-sanitize": "1.2.13",
-    "angular-translate": "2.0.0",
-    "angular-translate-storage-cookie": "2.0.0",
-    "angular-translate-loader-static-files": "2.0.0",
-    "angular-dynamic-locale": "0.1.1",
-    "angular-i18n": "1.2.5"
+    "ember": "1.4.0",
+    "ember-data": "~1.0.0",
+    "ember-model": "~0.0.11",
+    "bootstrap": "~3.0.3",
+    "ember-addons.bs_for_ember": "*",
+    "momentjs": "~2.5.1",
+    "ember-simple-auth": "*",
+    "selectize": "~0.8.5",
+    "ember-selectize": "git@github.com:miguelcobain/ember-selectize.git",
+    "jquery-ui": "~1.10.3",
+    "jquery-mousewheel": "~3.1.9"
   },
   "devDependencies": {
-    "angular-mocks": "1.2.13",
-    "angular-scenario": "1.2.13"
+    "ember-mocha-adapter": "0.1.2"
   }
 }
