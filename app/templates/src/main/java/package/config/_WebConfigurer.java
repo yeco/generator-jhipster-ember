@@ -10,17 +10,14 @@ import com.hazelcast.web.WebFilter;<% } %>
 import <%=packageName%>.web.filter.CachingHttpHeadersFilter;
 import <%=packageName%>.web.filter.StaticResourcesProductionFilter;
 import <%=packageName%>.web.filter.gzip.GZipServletFilter;
-import <%=packageName%>.web.servlet.HealthCheckServlet;
+import com.codahale.metrics.servlets.HealthCheckServlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.context.embedded.ServletContextInitializer;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;<% if (clusteredHttpSession == 'hazelcast') { %>
 import org.springframework.web.context.support.WebApplicationContextUtils;<% } %>
-import org.springframework.web.servlet.View;
-import org.springframework.web.servlet.view.JstlView;
 
 import javax.inject.Inject;
 import javax.servlet.*;
@@ -134,7 +131,7 @@ public class WebConfigurer implements ServletContextInitializer {
         compressingFilter.addMappingForUrlPatterns(disps, true, "*.json");
         compressingFilter.addMappingForUrlPatterns(disps, true, "*.html");
         compressingFilter.addMappingForUrlPatterns(disps, true, "*.js");
-        compressingFilter.addMappingForUrlPatterns(disps, true, "/app/rest/*");
+        compressingFilter.addMappingForUrlPatterns(disps, true, "/api/v1/*");
         compressingFilter.addMappingForUrlPatterns(disps, true, "/metrics/*");
 
         compressingFilter.setAsyncSupported(true);
@@ -200,7 +197,7 @@ public class WebConfigurer implements ServletContextInitializer {
         ServletRegistration.Dynamic metricsAdminServlet =
                 servletContext.addServlet("metricsServlet", new MetricsServlet());
 
-        metricsAdminServlet.addMapping("/metrics/metrics/*");
+        metricsAdminServlet.addMapping("/metrics/*");
         metricsAdminServlet.setAsyncSupported(true);
         metricsAdminServlet.setLoadOnStartup(2);
 
@@ -208,7 +205,7 @@ public class WebConfigurer implements ServletContextInitializer {
         ServletRegistration.Dynamic healthCheckServlet =
                 servletContext.addServlet("healthCheckServlet", new HealthCheckServlet());
 
-        healthCheckServlet.addMapping("/metrics/healthcheck/*");
+        healthCheckServlet.addMapping("/health/*");
         healthCheckServlet.setAsyncSupported(true);
         healthCheckServlet.setLoadOnStartup(2);
     }
