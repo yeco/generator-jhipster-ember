@@ -1,6 +1,5 @@
 package <%=packageName%>.config;
 
-import <%=packageName%>.config.locale.AngularCookieLocaleResolver;
 import org.springframework.boot.bind.RelaxedPropertyResolver;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.MessageSource;
@@ -21,13 +20,6 @@ public class LocaleConfiguration extends WebMvcConfigurerAdapter implements Envi
     @Override
     public void setEnvironment(Environment environment) {
         this.propertyResolver = new RelaxedPropertyResolver(environment, "spring.messageSource.");
-    }
-
-    @Bean(name = "localeResolver")
-    public LocaleResolver localeResolver() {
-        final AngularCookieLocaleResolver cookieLocaleResolver = new AngularCookieLocaleResolver();
-        cookieLocaleResolver.setCookieName("NG_TRANSLATE_LANG_KEY");
-        return cookieLocaleResolver;
     }
 
     @Bean

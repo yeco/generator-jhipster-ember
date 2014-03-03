@@ -198,9 +198,6 @@ JhipsterGenerator.prototype.app = function app() {
     this.template('src/main/java/package/config/audit/_package-info.java', javaDir + 'config/audit/package-info.java');
     this.template('src/main/java/package/config/audit/_AuditConfiguration.java', javaDir + 'config/audit/AuditConfiguration.java');
 
-    this.template('src/main/java/package/config/locale/_package-info.java', javaDir + 'config/locale/package-info.java');
-    this.template('src/main/java/package/config/locale/_AngularCookieLocaleResolver.java', javaDir + 'config/locale/AngularCookieLocaleResolver.java');
-
     this.template('src/main/java/package/config/metrics/_package-info.java', javaDir + 'config/metrics/package-info.java');
     this.template('src/main/java/package/config/metrics/_DatabaseHealthCheck.java', javaDir + 'config/metrics/DatabaseHealthCheck.java');
     this.template('src/main/java/package/config/metrics/_JavaMailHealthCheck.java', javaDir + 'config/metrics/JavaMailHealthCheck.java');

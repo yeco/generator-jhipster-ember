@@ -57,7 +57,7 @@ dependencies {
     compile("com.hazelcast:hazelcast-spring:<%= _.unescape('\$\{versions.hazelcast}')%>")
     compile("com.hazelcast:hazelcast:<%= _.unescape('\$\{versions.hazelcast}')%>")<% } %><% if (clusteredHttpSession == 'hazelcast' && hibernateCache != 'hazelcast') { %>
     compile("com.hazelcast:hazelcast:<%= _.unescape('\$\{versions.hazelcast}')%>")<% } %><% if (clusteredHttpSession == 'hazelcast') { %>
-    compile("com.hazelcast:hazelcast-wm:<%= _.unescape('\$\{hazelcast.version}')%>")<% } %>
+    compile("com.hazelcast:hazelcast-wm:<%= _.unescape('\$\{versions.hazelcast}')%>")<% } %>
     compile("com.ryantenney.metrics:metrics-spring:3.0.0-RC4")
     compile("com.zaxxer:HikariCP:1.3.0")
     compile("commons-lang:commons-lang:2.6")
