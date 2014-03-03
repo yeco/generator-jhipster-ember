@@ -1,28 +1,22 @@
-package <%=packageName%>.repository;
+package <%=packageName%>.config.audit;
 
-import <%=packageName%>.config.audit.AuditEventConverter;
 import <%=packageName%>.domain.PersistentAuditEvent;
+import <%=packageName%>.repository.PersistenceAuditEventRepository;
+import <%=packageName%>.service.AuditEventConverter;
 import org.joda.time.LocalDateTime;
 import org.springframework.boot.actuate.audit.AuditEvent;
 import org.springframework.boot.actuate.audit.AuditEventRepository;
 import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Repository;
+import org.springframework.context.annotation.Configuration;
 
 import javax.inject.Inject;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Wraps an implementation of Spring Boot's AuditEventRepository.
- */
-@Repository
-public class CustomAuditEventRepository {
-
-    @Inject
-    private PersistenceAuditEventRepository persistenceAuditEventRepository;
-
+@Configuration
+public class AuditConfiguration {
     @Bean
-    public AuditEventRepository auditEventRepository() {
+    public AuditEventRepository auditEventRepository(final PersistenceAuditEventRepository persistenceAuditEventRepository) {
         return new AuditEventRepository() {
 
             @Inject
@@ -56,3 +50,4 @@ public class CustomAuditEventRepository {
         };
     }
 }
+

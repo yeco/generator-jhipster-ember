@@ -1,6 +1,5 @@
 package <%=packageName%>.service;
 
-import <%=packageName%>.config.audit.AuditEventConverter;
 import <%=packageName%>.domain.PersistentAuditEvent;
 import <%=packageName%>.repository.PersistenceAuditEventRepository;
 import org.joda.time.LocalDateTime;

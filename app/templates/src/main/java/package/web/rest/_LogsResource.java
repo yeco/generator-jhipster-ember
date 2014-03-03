@@ -16,12 +16,12 @@ import java.util.List;
  * Controller for view and managing Log Level at runtime.
  */
 @RestController
-@RequestMapping("/app")
+@RequestMapping("/api/v1")
 public class LogsResource {
 
     private final Logger log = LoggerFactory.getLogger(LogsResource.class);
 
-    @RequestMapping(value = "/rest/logs",
+    @RequestMapping(value = "/logs",
             method = RequestMethod.GET,
             produces = "application/json")
     @Timed
@@ -35,7 +35,7 @@ public class LogsResource {
         return loggers;
     }
 
-    @RequestMapping(value = "/rest/logs",
+    @RequestMapping(value = "/logs",
             method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Timed
