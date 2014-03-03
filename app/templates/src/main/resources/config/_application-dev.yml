@@ -10,7 +10,7 @@ spring:
 
     jpa:
         database-platform: <% if (devDatabaseType == 'mysql') { %>org.hibernate.dialect.MySQLInnoDBDialect<% } else if (devDatabaseType == 'postgresql') { %>org.hibernate.dialect.PostgreSQLDialect<% } else { %>org.hibernate.dialect.H2Dialect<% } %>
-        database: <% if (devDatabaseType == 'mysql') { %>MYSQL<% } else if (devDatabaseType == 'postgresql') { %>POSTGRESQL<% } else { %>HSQL<% } %>
+        database: <% if (devDatabaseType == 'mysql') { %>MYSQL<% } else if (devDatabaseType == 'postgresql') { %>POSTGRESQL<% } else { %>H2<% } %>
         openInView: false
         show_sql: true
         generate-ddl: false
