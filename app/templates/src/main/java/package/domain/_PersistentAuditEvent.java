@@ -20,7 +20,7 @@ import java.util.Map;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "persistent_audit_events")<% if (hibernateCache != 'no') { %>
+@Table(name = "audit_events")<% if (hibernateCache != 'no') { %>
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)<% } %>
 public class PersistentAuditEvent extends Base {
     @NotNull

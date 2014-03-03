@@ -16,7 +16,7 @@ import java.util.UUID;
  */
 @Data
 @MappedSuperclass
-public class Base implements Persistable<UUID>, Serializable {
+public abstract class Base implements Persistable<UUID>, Serializable {
     @Id
     @GeneratedValue(generator="uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")

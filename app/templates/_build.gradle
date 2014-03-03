@@ -74,8 +74,8 @@ dependencies {
     compile("joda-time:joda-time:2.3")
     compile("org.apache.geronimo.javamail:geronimo-javamail_1.4_mail:1.8.3")
     compile("org.jadira.usertype:usertype.core:3.1.0.CR10")<% if (hibernateCache == 'ehcache') { %>
-    compile("org.hibernate:hibernate-ehcache:+")<% } %>
-    compile("org.hibernate:hibernate-validator:+")
+    compile("org.hibernate:hibernate-ehcache:4.3.1.Final")<% } %>
+    compile("org.hibernate:hibernate-validator:5.1.0.CR1")
     compile("org.liquibase:liquibase-core:3.1.1")
     compile("org.springframework.boot:spring-boot-starter-web:1.0.0.RC3")
     compile("org.springframework.boot:spring-boot-starter-actuator:1.0.0.RC3")
@@ -83,21 +83,23 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-data-jpa:1.0.0.RC3")
     compile("org.springframework.boot:spring-boot-starter-thymeleaf:1.0.0.RC3")
     compile("org.springframework:spring-context-support:4.0.1.RELEASE")
+    compile("org.springframework.security.oauth:spring-security-oauth2:2.0.0.BUILD-SNAPSHOT")
+    compile("org.springframework.security:spring-security-jwt:1.0.0.RELEASE")
     compile("org.projectlombok:lombok:1.12.2")
     // Database dependencies
     <% if (devDatabaseType == 'mysql' || prodDatabaseType == 'mysql') { %>
-    compile("mysql:mysql-connector-java:+")
+    compile("mysql:mysql-connector-java:5.1.29")
     <% } %><% if (devDatabaseType == 'postgresql' || prodDatabaseType == 'postgresql') { %>
     compile("org.postgresql:postgresql:9.3-1100-jdbc41")
     <% } %><% if (devDatabaseType != 'mysql' && devDatabaseType != 'postgresql') { %>
-    compile("org.hsqldb:hsqldb:+")
+    compile("com.h2database:h2:1.3.175")
     <% } %>
-    compile("org.springsource.loaded:springloaded:+")
+    compile("org.springsource.loaded:springloaded:1.2.0.BUILD-SNAPSHOT")
     runtime("com.mattbertolini:liquibase-slf4j:1.2.1")
     // Test dependencies
     testCompile("com.jayway.awaitility:awaitility:1.4.0")
     testCompile("com.jayway.jsonpath:json-path:0.9.1")
-    testCompile("com.h2database:h2:+")
+    testCompile("com.h2database:h2:1.3.175")
     testCompile("org.springframework.boot:spring-boot-starter-test:1.0.0.RC3")
     testCompile("org.assertj:assertj-core:1.5.0")
 }

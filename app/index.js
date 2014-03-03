@@ -109,8 +109,8 @@ JhipsterGenerator.prototype.askFor = function askFor() {
             message: '(6/6) Which *development* database would you like to use?',
             choices: [
                 {
-                    value: 'hsqldbMemory',
-                    name: 'HSQLDB in-memory'
+                    value: 'h2Memory',
+                    name: 'H2 in-memory'
                 },
                 {
                     value: 'mysql',
@@ -194,6 +194,8 @@ JhipsterGenerator.prototype.app = function app() {
     this.template('src/main/java/package/config/_MetricsConfiguration.java', javaDir + 'config/MetricsConfiguration.java');
     this.template('src/main/java/package/config/_ThymeleafConfiguration.java', javaDir + 'config/ThymeleafConfiguration.java');
     this.template('src/main/java/package/config/_WebConfigurer.java', javaDir + 'config/WebConfigurer.java');
+    this.template('src/main/java/package/config/_SecurityConfiguration.java', javaDir + 'config/SecurityConfiguration.java');
+    this.template('src/main/java/package/config/_OAuth2ServerConfig.java', javaDir + 'config/OAuth2ServerConfig.java');
 
     this.template('src/main/java/package/config/audit/_package-info.java', javaDir + 'config/audit/package-info.java');
     this.template('src/main/java/package/config/audit/_AuditEventConverter.java', javaDir + 'config/audit/AuditEventConverter.java');
@@ -232,7 +234,7 @@ JhipsterGenerator.prototype.app = function app() {
     this.template('src/main/java/package/security/_package-info.java', javaDir + 'security/package-info.java');
     this.template('src/main/java/package/security/_AuthoritiesConstants.java', javaDir + 'security/AuthoritiesConstants.java');
     this.template('src/main/java/package/security/_SecurityUtils.java', javaDir + 'security/SecurityUtils.java');
-    this.template('src/main/java/package/security/_UserDetailsService.java', javaDir + 'security/UserDetailsService.java');
+    this.template('src/main/java/package/security/_UserApprovalHandler.java', javaDir + 'security/UserApprovalHandler.java');
 
     this.template('src/main/java/package/service/_package-info.java', javaDir + 'service/package-info.java');
     this.template('src/main/java/package/service/_MailService.java', javaDir + 'service/MailService.java');
