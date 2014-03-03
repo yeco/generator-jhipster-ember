@@ -34,10 +34,9 @@ public class PersistentAuditEvent extends Base {
     @Column(name = "event_type")
     private String auditEventType;
 
-
     @ElementCollection
     @MapKeyColumn(name = "name")
     @Column(name = "value")
-    @CollectionTable(name = "persistent_audit_event_data", joinColumns = @JoinColumn(name = "audit_event_id"))
+    @CollectionTable(name = "audit_event_data", joinColumns = @JoinColumn(name = "audit_event_id"))
     private Map<String, String> data = new HashMap<>();
 }

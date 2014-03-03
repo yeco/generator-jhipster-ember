@@ -7,28 +7,6 @@
         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
     <changeSet id="1" author="jhipster">
-        <createTable tableName="users">
-            <column name="id" type="UUID">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="password" type="varchar(100)"/>
-            <column name="first_name" type="varchar(50)"/>
-            <column name="last_name" type="varchar(50)"/>
-            <column name="email" type="varchar(100)"/>
-        </createTable>
-
-        <createTable tableName="authorities">
-            <column name="id" type="UUID">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="name" type="varchar(255)"/>
-        </createTable>
-
-        <createTable tableName="users_authorities">
-            <column name="user_id" type="UUID"/>
-            <column name="authority_id" type="UUID"/>
-        </createTable>
-
         <createTable tableName="audit_events">
             <column name="id" type="UUID">
                 <constraints primaryKey="true" nullable="false"/>
@@ -44,13 +22,6 @@
             <column name="value" type="varchar(255)"/>
         </createTable>
 
-        <createIndex indexName="idx_user_authority"
-                     tableName="users_authorities"
-                     unique="true">
-            <column name="user_id" type="UUID"/>
-            <column name="authority_id" type="UUID"/>
-        </createIndex>
-
         <createIndex indexName="idx_audit_event"
                      tableName="audit_events"
                      unique="false">
@@ -63,17 +34,5 @@
                      unique="false">
             <column name="audit_event_id" type="UUID"/>
         </createIndex>
-
-        <addForeignKeyConstraint baseColumnNames="authority_id"
-                                 baseTableName="users_authorities"
-                                 constraintName="fk_authority_name"
-                                 referencedColumnNames="id"
-                                 referencedTableName="authorities"/>
-
-        <addForeignKeyConstraint baseColumnNames="user_id"
-                                 baseTableName="users_authorities"
-                                 constraintName="fk_user_login"
-                                 referencedColumnNames="id"
-                                 referencedTableName="users"/>
     </changeSet>
 </databaseChangeLog>

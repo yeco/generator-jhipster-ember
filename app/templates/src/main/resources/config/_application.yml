@@ -9,6 +9,11 @@ async:
     maxPoolSize: 50
     queueCapacity: 10000
 
+stormpath:
+  applicationUrl:
+  apiKeyId:
+  apiKeySecret:
+
 spring:
     mail:
         host: localhost

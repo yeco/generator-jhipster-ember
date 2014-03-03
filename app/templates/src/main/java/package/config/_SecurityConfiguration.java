@@ -1,5 +1,7 @@
 package <%=packageName%>.config;
 
+import com.stormpath.spring.security.provider.StormpathAuthenticationProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,13 +18,12 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+    @Autowired
+    private StormpathAuthenticationProvider authenticationProvider;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
-                .withUser("marissa").password("koala").roles("USER", "ADMIN")
-                .and()
-                .withUser("paul").password("emu").roles("USER");
+        auth.authenticationProvider(authenticationProvider);
     }
 
     @Override

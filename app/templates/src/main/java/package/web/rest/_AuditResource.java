@@ -1,6 +1,5 @@
 package <%=packageName%>.web.rest;
 
-import <%=packageName%>.security.AuthoritiesConstants;
 import <%=packageName%>.service.AuditEventService;
 import <%=packageName%>.web.propertyeditors.LocaleDateTimeEditor;
 import org.joda.time.LocalDateTime;
@@ -30,7 +29,7 @@ public class AuditResource {
     @RequestMapping(value = "/audits",
             method = RequestMethod.GET,
             produces = "application/json")
-    @RolesAllowed(AuthoritiesConstants.ADMIN)
+    @RolesAllowed("ADMIN")
     public List<AuditEvent> findAll() {
         return auditEventService.findAll();
     }
@@ -38,7 +37,7 @@ public class AuditResource {
     @RequestMapping(value = "/audits/byDates",
             method = RequestMethod.GET,
             produces = "application/json")
-    @RolesAllowed(AuthoritiesConstants.ADMIN)
+    @RolesAllowed("ADMIN")
     public List<AuditEvent> findByDates(@RequestParam(value = "fromDate") LocalDateTime fromDate,
                                     @RequestParam(value = "toDate") LocalDateTime toDate) {
         return auditEventService.findByDates(fromDate, toDate);

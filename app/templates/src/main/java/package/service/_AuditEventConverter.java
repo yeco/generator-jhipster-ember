@@ -1,13 +1,13 @@
-package <%=packageName%>.config.audit;
+package <%=packageName%>.service;
 
 import <%=packageName%>.domain.PersistentAuditEvent;
 import org.springframework.boot.actuate.audit.AuditEvent;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
 import java.util.*;
 
-@Configuration
+@Component
 public class AuditEventConverter {
 
     /**
