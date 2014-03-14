@@ -8,7 +8,6 @@ import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.web.SessionListener;
 import com.hazelcast.web.WebFilter;<% } %>
 import <%=packageName%>.web.filter.CachingHttpHeadersFilter;
-import <%=packageName%>.web.filter.StaticResourcesProductionFilter;
 import <%=packageName%>.web.filter.gzip.GZipServletFilter;
 import com.codahale.metrics.servlets.HealthCheckServlet;
 import org.slf4j.Logger;
@@ -18,6 +17,7 @@ import org.springframework.boot.context.embedded.ServletContextInitializer;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;<% if (clusteredHttpSession == 'hazelcast') { %>
 import org.springframework.web.context.support.WebApplicationContextUtils;<% } %>
+import org.tuckey.web.filters.urlrewrite.UrlRewriteFilter;
 
 import javax.inject.Inject;
 import javax.servlet.*;
@@ -53,8 +53,7 @@ public class WebConfigurer implements ServletContextInitializer {
         initClusteredHttpSessionFilter(servletContext, disps);<% } %>
         initMetrics(servletContext, disps);
         if (env.acceptsProfiles(Constants.SPRING_PROFILE_PRODUCTION)) {
-            initStaticResourcesProductionFilter(servletContext, disps);
-            initCachingHttpHeadersFilter(servletContext, disps);
+            initUrlRewriteProductionFilter(servletContext, disps);
         }
         initGzipFilter(servletContext, disps);
 
@@ -137,24 +136,13 @@ public class WebConfigurer implements ServletContextInitializer {
         compressingFilter.setAsyncSupported(true);
     }
 
-    /**
-     * Initializes the static resources production Filter.
-     */
-    private void initStaticResourcesProductionFilter(ServletContext servletContext,
-                                                     EnumSet<DispatcherType> disps) {
+    private void initUrlRewriteProductionFilter(ServletContext servletContext, EnumSet<DispatcherType> disps) {
+        log.debug("Registering tuckey urlrewritefilter");
 
-        log.debug("Registering static resources production Filter");
-        FilterRegistration.Dynamic staticResourcesProductionFilter =
-                servletContext.addFilter("staticResourcesProductionFilter",
-                        new StaticResourcesProductionFilter());
+        FilterRegistration.Dynamic urlRewriteFilter = servletContext.addFilter("urlRewriteFilter", new UrlRewriteFilter());
+        urlRewriteFilter.setInitParameter("confPath", "urlrewrite.xml");
 
-        staticResourcesProductionFilter.addMappingForUrlPatterns(disps, true, "/");
-        staticResourcesProductionFilter.addMappingForUrlPatterns(disps, true, "/index.html");
-        staticResourcesProductionFilter.addMappingForUrlPatterns(disps, true, "/images/*");
-        staticResourcesProductionFilter.addMappingForUrlPatterns(disps, true, "/fonts/*");
-        staticResourcesProductionFilter.addMappingForUrlPatterns(disps, true, "/scripts/*");
-        staticResourcesProductionFilter.addMappingForUrlPatterns(disps, true, "/styles/*");
-        staticResourcesProductionFilter.setAsyncSupported(true);
+        urlRewriteFilter.addMappingForUrlPatterns(disps, true, "/*");
     }
 
     /**

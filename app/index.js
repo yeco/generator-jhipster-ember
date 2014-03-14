@@ -12,7 +12,9 @@ var JhipsterGenerator = module.exports = function JhipsterGenerator(args, option
         this.installDependencies({
             skipInstall: options['skip-install'],
             callback: function() {
-                this.spawnCommand('gradle', ['wrapper']);
+              this.spawnCommand('grunt', ['build']).on('exit', function() {
+                this.spawnCommand('gradle', ['wrapper', 'idea', 'clean', 'build']);
+              }.bind(this));
             }.bind(this)
         });
     });
@@ -171,6 +173,7 @@ JhipsterGenerator.prototype.app = function app() {
     this.copy(resourceDir + '/templates/error.html', resourceDir + 'templates/error.html');
 
     this.template(resourceDir + '_logback.xml', resourceDir + 'logback.xml');
+    this.copy(resourceDir + 'urlrewrite.xml', resourceDir + 'urlrewrite.xml');
 
     this.template(resourceDir + '/config/_application.yml', resourceDir + 'config/application.yml');
     this.template(resourceDir + '/config/_application-dev.yml', resourceDir + 'config/application-dev.yml');
@@ -234,7 +237,6 @@ JhipsterGenerator.prototype.app = function app() {
 
     this.template('src/main/java/package/web/filter/_package-info.java', javaDir + 'web/filter/package-info.java');
     this.template('src/main/java/package/web/filter/_CachingHttpHeadersFilter.java', javaDir + 'web/filter/CachingHttpHeadersFilter.java');
-    this.template('src/main/java/package/web/filter/_StaticResourcesProductionFilter.java', javaDir + 'web/filter/StaticResourcesProductionFilter.java');
 
     this.template('src/main/java/package/web/filter/gzip/_package-info.java', javaDir + 'web/filter/gzip/package-info.java');
     this.template('src/main/java/package/web/filter/gzip/_GzipResponseHeadersNotModifiableException.java', javaDir + 'web/filter/gzip/GzipResponseHeadersNotModifiableException.java');

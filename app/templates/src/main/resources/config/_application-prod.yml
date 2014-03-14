@@ -3,10 +3,10 @@ spring:
     datasource:
         dataSourceClassName: <% if (prodDatabaseType == 'mysql') { %>com.mysql.jdbc.jdbc2.optional.MysqlDataSource<% } else if (prodDatabaseType == 'postgresql') { %>org.postgresql.ds.PGSimpleDataSource<% } else { %>org.h2.jdbcx.JdbcDataSource<% } %>
         url: <% if (prodDatabaseType == 'mysql') { %>jdbc:mysql://localhost:3306/<%= baseName %><% } else if (prodDatabaseType == 'postgresql') { %><% } else { %>jdbc:hsqldb:mem:<%= baseName %><% } %>
-        databaseName: <% if (prodDatabaseType == 'postgresql') { %><%= baseName %><% } %>
+        databaseName: <% if (prodDatabaseType == 'postgresql') { %><%= _.underscored(baseName) %><% } %>
         serverName: <% if (prodDatabaseType == 'postgresql') { %>localhost<% } %>
-        username: <% if (prodDatabaseType == 'mysql') { %>root<% } else if (prodDatabaseType == 'postgresql') { %><%= baseName %><% } %>
-        password:
+        username: <% if (prodDatabaseType == 'mysql') { %>root<% } else if (prodDatabaseType == 'postgresql') { %><%= _.underscored(baseName) %><% } %>
+        password: <%= _.underscored(baseName) %>
 
     jpa:
         database-platform: <% if (prodDatabaseType == 'mysql') { %>org.hibernate.dialect.MySQLInnoDBDialect<% } else if (prodDatabaseType == 'postgresql') { %>org.hibernate.dialect.PostgreSQLDialect<% } else { %>org.hibernate.dialect.H2Dialect<% } %>
