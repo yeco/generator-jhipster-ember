@@ -346,14 +346,14 @@ module.exports = function(grunt) {
             options: {
                 files: ['package.json', 'bower.json', 'src/main/resources/public/scripts/app.js', 'src/main/resources/application.yml'],
                 updateConfigs: [],
-                commit: false,
+                commit: true,
                 commitMessage: 'Release v%VERSION%',
                 commitFiles: ['-a'], // '-a' for all files
                 createTag: true,
                 tagName: 'v%VERSION%',
                 tagMessage: 'Version %VERSION%',
-                push: false,
-                pushTo: 'upstream',
+                push: true,
+                pushTo: 'origin',
                 gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d' // options to use with '$ git describe'
             }
         }
