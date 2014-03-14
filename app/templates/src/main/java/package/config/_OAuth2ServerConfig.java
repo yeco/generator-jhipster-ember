@@ -29,7 +29,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
  */
 @Configuration
 public class OAuth2ServerConfig  {
-    private static final String RESOURCE_ID = "<%=appname%>";
+    private static final String RESOURCE_ID = "<%=baseName%>";
 
     @Configuration
     @EnableResourceServer
@@ -106,7 +106,7 @@ public class OAuth2ServerConfig  {
             oauthServer
                     .tokenStore(tokenStore)
                     .userApprovalHandler(userApprovalHandler())
-                    .authenticationManager(authenticationManager).realm("<%=appname%>/client");
+                    .authenticationManager(authenticationManager).realm("<%=baseName%>/client");
         }
     }
 }
