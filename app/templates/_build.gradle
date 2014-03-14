@@ -6,15 +6,12 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.0.0.RC3'
-        classpath 'org.eclipse.jgit:org.eclipse.jgit:2.3.1.201302201838-r'
-        classpath 'com.pieceof8.gradle:gradle-snapshot-plugin:1.0.0'
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.0.0.RC4'
     }
 }
 
 apply plugin: 'idea'
 apply plugin: 'java'
-apply plugin: 'snapshot'
 apply plugin: 'spring-boot'
 
 sourceCompatibility = 1.7
@@ -27,6 +24,8 @@ jar {
 springBoot {
     backupSource = false
 }
+
+task stage(dependsOn: 'assemble')
 
 repositories {
     maven {
@@ -94,6 +93,6 @@ dependencies {
     testCompile("com.jayway.awaitility:awaitility:1.4.0")
     testCompile("com.jayway.jsonpath:json-path:0.9.1")
     testCompile("com.h2database:h2:1.3.175")
-    testCompile("org.springframework.boot:spring-boot-starter-test:1.0.0.RC3")
+    testCompile("org.springframework.boot:spring-boot-starter-test:<%= _.unescape('\$\{versions.spring_boot}')%>")
     testCompile("org.assertj:assertj-core:1.5.0")
 }
