@@ -2,7 +2,6 @@ package <%=packageName%>.domain;
 
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
-<% if (prodDatabaseType == 'postgresql') { %>import org.hibernate.annotations.Type;<% } %>
 import org.springframework.data.domain.Persistable;
 
 import javax.persistence.GeneratedValue;
@@ -22,7 +21,6 @@ public abstract class Base implements Persistable<UUID>, Serializable {
     @GeneratedValue(generator="uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     @NotNull
-    <% if (prodDatabaseType == 'postgresql') { %>@Type(type="pg-uuid")<% } %>
     private UUID id;
 
     @Override

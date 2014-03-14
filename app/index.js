@@ -91,32 +91,12 @@ JhipsterGenerator.prototype.askFor = function askFor() {
         },
         {
             type: 'list',
-            name: 'prodDatabaseType',
-            message: '(5/6) Which *production* database would you like to use?',
-            choices: [
-                {
-                    value: 'mysql',
-                    name: 'MySQL'
-                },
-                {
-                    value: 'postgresql',
-                    name: 'PostgreSQL'
-                }
-            ],
-            default: 1
-        },
-        {
-            type: 'list',
             name: 'devDatabaseType',
             message: '(6/6) Which *development* database would you like to use?',
             choices: [
                 {
                     value: 'h2Memory',
                     name: 'H2 in-memory'
-                },
-                {
-                    value: 'mysql',
-                    name: 'MySQL'
                 },
                 {
                     value: 'postgresql',
@@ -135,7 +115,6 @@ JhipsterGenerator.prototype.askFor = function askFor() {
         this.hibernateCache = props.hibernateCache;
         this.clusteredHttpSession = props.clusteredHttpSession;
         this.devDatabaseType = props.devDatabaseType;
-        this.prodDatabaseType = props.prodDatabaseType;
 
         cb();
     }.bind(this));
@@ -222,6 +201,8 @@ JhipsterGenerator.prototype.app = function app() {
     this.template('src/main/java/package/domain/_PersistentAuditEvent.java', javaDir + 'domain/PersistentAuditEvent.java');
     this.template('src/main/java/package/domain/_Base.java', javaDir + 'domain/Base.java');
     this.template('src/main/java/package/domain/util/_CustomLocalDateSerializer.java', javaDir + 'domain/util/CustomLocalDateSerializer.java');
+
+    this.template('src/main/java/package/hibernate/_CustomPostgreSQLDialect.java', javaDir + 'hibernate/CustomPostgreSQLDialect.java');
 
     this.template('src/main/java/package/repository/_package-info.java', javaDir + 'repository/package-info.java');
     this.template('src/main/java/package/repository/_PersistenceAuditEventRepository.java', javaDir + 'repository/PersistenceAuditEventRepository.java');
