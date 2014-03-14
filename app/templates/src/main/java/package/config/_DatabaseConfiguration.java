@@ -62,7 +62,7 @@ public class DatabaseConfiguration {
         }
         String dbUrl;
 
-        if (url.contains("postgresql")) {
+        if (url.contains("postgres")) {
             dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath();
         } else if (url.contains("h2")) {
             dbUrl = "jdbc:h2:mem:" + dbUri.getPath();
