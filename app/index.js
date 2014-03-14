@@ -131,6 +131,9 @@ JhipsterGenerator.prototype.app = function app() {
     this.copy('spring_loaded/springloaded-1.2.0-dev.jar', 'spring_loaded/springloaded-1.2.0-dev.jar');
     this.copy('system.properties', 'system.properties');
     this.copy('Procfile', 'Procfile');
+    this.copy('VERSION', 'VERSION');
+    this.copy('build.sh', 'build.sh');
+    this.copy('release.sh', 'release.sh');
 
     var packageFolder = this.packageName.replace(/\./g, '/');
     this.template('_build.gradle', 'build.gradle');
