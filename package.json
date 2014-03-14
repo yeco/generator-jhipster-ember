@@ -1,6 +1,6 @@
 {
   "name": "generator-jhipster-ember",
-  "version": "0.10.1",
+  "version": "0.1.0",
   "description": "Java + Spring + JPA + EmberJS complete dev stack",
   "keywords": [
     "yeoman-generator",
