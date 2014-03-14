@@ -344,7 +344,7 @@ module.exports = function(grunt) {
         },
         bump: {
             options: {
-                files: ['package.json', 'bower.json', 'src/main/resources/public/scripts/app.js', 'src/main/resources/application.yml'],
+                files: ['package.json', 'bower.json', 'VERSION', 'src/main/resources/application.yml'],
                 updateConfigs: [],
                 commit: true,
                 commitMessage: 'Release v%VERSION%',
