@@ -148,6 +148,8 @@ JhipsterGenerator.prototype.app = function app() {
     this.copy('Gruntfile.js', 'Gruntfile.js');
     this.copy('gitignore', '.gitignore');
     this.copy('spring_loaded/springloaded-1.2.0-dev.jar', 'spring_loaded/springloaded-1.2.0-dev.jar');
+    this.copy('system.properties', 'system.properties');
+    this.copy('Procfile', 'Procfile');
 
     var packageFolder = this.packageName.replace(/\./g, '/');
     this.template('_build.gradle', 'build.gradle');
