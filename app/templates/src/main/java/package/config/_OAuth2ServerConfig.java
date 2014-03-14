@@ -3,6 +3,7 @@ package <%=packageName%>.config;
 import <%=packageName%>.security.UserApprovalHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -20,7 +21,9 @@ import org.springframework.security.oauth2.provider.approval.ApprovalStore;
 import org.springframework.security.oauth2.provider.approval.TokenApprovalStore;
 import org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHandler;
 import org.springframework.security.oauth2.provider.expression.OAuth2WebSecurityExpressionHandler;
+import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
 import org.springframework.security.oauth2.provider.token.InMemoryTokenStore;
+import org.springframework.security.oauth2.provider.token.JwtTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -78,6 +81,11 @@ public class OAuth2ServerConfig  {
         @Autowired
         private ClientDetailsService clientDetailsService;
 
+        @Value("<%= _.unescape('\$\{jwt.token.signing-key}')%>")
+        private String jwtTokenSigningKey;
+        @Value("<%= _.unescape('\$\{jwt.token.verification-key}')%>")
+        private String jwtTokenVerificationKey;
+
         @Override
         public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
             clients.inMemory().withClient("web")
@@ -100,11 +108,18 @@ public class OAuth2ServerConfig  {
             return store;
         }
 
+        private AuthorizationServerTokenServices tokenServices() {
+            final JwtTokenServices jwtTokenServices = new JwtTokenServices();
+            jwtTokenServices.setSigningKey(jwtTokenSigningKey);
+            jwtTokenServices.setVerifierKey(jwtTokenSigningKey);
+            return jwtTokenServices;
+        }
 
         @Override
         public void configure(OAuth2AuthorizationServerConfigurer oauthServer) throws Exception {
             oauthServer
                     .tokenStore(tokenStore)
+                    .tokenService(tokenServices())
                     .userApprovalHandler(userApprovalHandler())
                     .authenticationManager(authenticationManager).realm("<%=baseName%>/client");
         }

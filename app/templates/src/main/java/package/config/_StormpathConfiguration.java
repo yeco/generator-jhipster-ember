@@ -16,11 +16,11 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class StormpathConfiguration {
-    @Value("<%= _.unescape('\$\{stormpath.apiKeyId}')%>")
+    @Value("<%= _.unescape('\$\{stormpath.api.key.id}')%>")
     private String stormpathApiKeyId;
-    @Value("<%= _.unescape('\$\{stormpath.apiKeySecret}')%>")
+    @Value("<%= _.unescape('\$\{stormpath.api.key.secret}')%>")
     private String stormpathApiKeySecret;
-    @Value("<%= _.unescape('\$\{stormpath.applicationUrl}')%>")
+    @Value("<%= _.unescape('\$\{stormpath.application.url}')%>")
     private String stormpathApplicationUrl;
 
     @Autowired
