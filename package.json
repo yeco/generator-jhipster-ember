@@ -10,7 +10,8 @@
     "JPA",
     "Hibernate",
     "EmberJS",
-    "Twitter Bootstrap"
+    "Twitter Bootstrap",
+    "Gradle"
   ],
   "homepage": "",
   "bugs": "https://github.com/jarias/generator-jhipster-ember/issues",
