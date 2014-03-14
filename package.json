@@ -1,7 +1,7 @@
 {
-  "name": "generator-jhipster",
-  "version": "0.10.1",
-  "description": "Java + Spring + JPA + AngularJS complete dev stack",
+  "name": "generator-jhipster-ember",
+  "version": "0.1.0",
+  "description": "Java + Spring + JPA + EmberJS complete dev stack",
   "keywords": [
     "yeoman-generator",
     "Java",
@@ -9,20 +9,20 @@
     "Spring Security",
     "JPA",
     "Hibernate",
-    "AngularJS",
+    "EmberJS",
     "Twitter Bootstrap"
   ],
-  "homepage": "http://jhipster.github.io/",
-  "bugs": "https://github.com/jhipster/generator-jhipster/issues",
+  "homepage": "",
+  "bugs": "https://github.com/jarias/generator-jhipster-ember/issues",
   "author": {
-    "name": "Julien Dubois",
+    "name": "Julio Arias (initial work: Julien Dubois)",
     "email": "",
-    "url": "https://github.com/jdubois"
+    "url": "https://github.com/jarias"
   },
   "main": "app/index.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/jhipster/generator-jhipster.git"
+    "url": "git://github.com/jarias/generator-jhipster-ember.git"
   },
   "scripts": {
     "test": "mocha"

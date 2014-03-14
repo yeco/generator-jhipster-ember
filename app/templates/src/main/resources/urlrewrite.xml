@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE urlrewrite
+        PUBLIC "-//tuckey.org//DTD UrlRewrite 4.0//EN"
+        "http://www.tuckey.org/res/dtds/urlrewrite4.0.dtd">
+
+<urlrewrite>
+    <rule>
+        <from>^/$</from>
+        <to>/dist/index.html</to>
+    </rule>
+    <rule>
+        <from>^/index.html$</from>
+        <to>/dist/index.html</to>
+    </rule>
+    <rule>
+        <from>^/images/(.*)$</from>
+        <to>/dist/images/$1</to>
+    </rule>
+    <rule>
+        <from>^/fonts/(.*)$</from>
+        <to>/dist/fonts/$1</to>
+    </rule>
+    <rule>
+        <from>^/scripts/(.*)$</from>
+        <to>/dist/scripts/$1</to>
+    </rule>
+    <rule>
+        <from>^/style/(.*)$</from>
+        <to>/dist/style/$1</to>
+    </rule>
+    <!-- Force HTTPS prod only -->
+    <!--
+    <rule match-type="regex">
+        <condition type="header" operator="notequal" name="X-Forwarded-Proto">^HTTPS$</condition>
+        <from>^.*$</from>
+        <to type="permanent-redirect" last="true">https://%{server-name}%{request-uri}</to>
+    </rule>
+    -->
+</urlrewrite>

@@ -1,17 +1,27 @@
-# Disable the spring security default configuration from spring-boot-actuator
-management.security.enabled: true
-security.basic.enabled: false
-
 # Disable Jolokia - An http/json bridge for remote JMX access
 endpoints.jolokia.enabled: false
 
-# security configuration (this key should be unique for your application, and kept secret)
-jhipster.security.rememberme.key: <%= baseName %>
+info:
+  build:
+    artifact: <%=baseName%>
+    version: 0.0.0
+    description: Change Me Plz!!
+
+server:
+  port: 9990
+  tomcat:
+    remote_ip_header: x-forwarded-for
+    protocol_header: x-forwarded-proto
 
 async:
     corePoolSize: 2
     maxPoolSize: 50
     queueCapacity: 10000
+
+stormpath:
+  applicationUrl:
+  apiKeyId:
+  apiKeySecret:
 
 spring:
     mail:

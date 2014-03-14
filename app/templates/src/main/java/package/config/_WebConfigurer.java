@@ -8,27 +8,25 @@ import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.web.SessionListener;
 import com.hazelcast.web.WebFilter;<% } %>
 import <%=packageName%>.web.filter.CachingHttpHeadersFilter;
-import <%=packageName%>.web.filter.StaticResourcesProductionFilter;
 import <%=packageName%>.web.filter.gzip.GZipServletFilter;
-import <%=packageName%>.web.servlet.HealthCheckServlet;<% if (websocket == 'atmosphere') { %>
-import org.atmosphere.cache.UUIDBroadcasterCache;
-import org.atmosphere.cpr.AtmosphereFramework;
-import org.atmosphere.cpr.AtmosphereServlet;<% } %>
+import com.codahale.metrics.servlets.HealthCheckServlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.apache.catalina.connector.Connector;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
 import org.springframework.boot.context.embedded.ServletContextInitializer;
+import org.springframework.boot.context.embedded.tomcat.TomcatConnectorCustomizer;
+import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;<% if (websocket == 'atmosphere') { %>
-import org.springframework.util.ReflectionUtils;<% } %><% if (clusteredHttpSession == 'hazelcast') { %>
+import org.springframework.core.env.Environment;<% if (clusteredHttpSession == 'hazelcast') { %>
 import org.springframework.web.context.support.WebApplicationContextUtils;<% } %>
-import org.springframework.web.servlet.View;
-import org.springframework.web.servlet.view.JstlView;
+import org.tuckey.web.filters.urlrewrite.UrlRewriteFilter;
 
 import javax.inject.Inject;
-import javax.servlet.*;<% if (websocket == 'atmosphere') { %>
-import java.lang.reflect.Field;<% } %>
+import javax.servlet.*;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -53,17 +51,30 @@ public class WebConfigurer implements ServletContextInitializer {
     @Inject
     private HealthCheckRegistry healthCheckRegistry;
 
+    @Value("<%= _.unescape('\$\{server.port:9990}')%>")
+    private int port;
+
+    @Bean
+    public EmbeddedServletContainerFactory servletContainer() {
+        TomcatEmbeddedServletContainerFactory factory = new TomcatEmbeddedServletContainerFactory(this.port);
+        factory.addConnectorCustomizers(new TomcatConnectorCustomizer() {
+            @Override
+            public void customize(Connector connector) {
+                connector.setProperty("bindOnInit", "true");
+            }
+        });
+        return factory;
+    }
+
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
         log.info("Web application configuration, using profiles: {}", Arrays.toString(env.getActiveProfiles()));
         EnumSet<DispatcherType> disps = EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.ASYNC);
 <% if (clusteredHttpSession == 'hazelcast') { %>
         initClusteredHttpSessionFilter(servletContext, disps);<% } %>
-        initMetrics(servletContext, disps);<% if (websocket == 'atmosphere') { %>
-        initAtmosphereServlet(servletContext);<% } %>
+        initMetrics(servletContext, disps);
         if (env.acceptsProfiles(Constants.SPRING_PROFILE_PRODUCTION)) {
-            initStaticResourcesProductionFilter(servletContext, disps);
-            initCachingHttpHeadersFilter(servletContext, disps);
+            initUrlRewriteProductionFilter(servletContext, disps);
         }
         initGzipFilter(servletContext, disps);
 
@@ -140,31 +151,19 @@ public class WebConfigurer implements ServletContextInitializer {
         compressingFilter.addMappingForUrlPatterns(disps, true, "*.json");
         compressingFilter.addMappingForUrlPatterns(disps, true, "*.html");
         compressingFilter.addMappingForUrlPatterns(disps, true, "*.js");
-        compressingFilter.addMappingForUrlPatterns(disps, true, "/app/rest/*");
+        compressingFilter.addMappingForUrlPatterns(disps, true, "/api/v1/*");
         compressingFilter.addMappingForUrlPatterns(disps, true, "/metrics/*");
 
         compressingFilter.setAsyncSupported(true);
     }
 
-    /**
-     * Initializes the static resources production Filter.
-     */
-    private void initStaticResourcesProductionFilter(ServletContext servletContext,
-                                                     EnumSet<DispatcherType> disps) {
+    private void initUrlRewriteProductionFilter(ServletContext servletContext, EnumSet<DispatcherType> disps) {
+        log.debug("Registering tuckey urlrewritefilter");
 
-        log.debug("Registering static resources production Filter");
-        FilterRegistration.Dynamic staticResourcesProductionFilter =
-                servletContext.addFilter("staticResourcesProductionFilter",
-                        new StaticResourcesProductionFilter());
+        FilterRegistration.Dynamic urlRewriteFilter = servletContext.addFilter("urlRewriteFilter", new UrlRewriteFilter());
+        urlRewriteFilter.setInitParameter("confPath", "urlrewrite.xml");
 
-        staticResourcesProductionFilter.addMappingForUrlPatterns(disps, true, "/");
-        staticResourcesProductionFilter.addMappingForUrlPatterns(disps, true, "/index.html");
-        staticResourcesProductionFilter.addMappingForUrlPatterns(disps, true, "/images/*");
-        staticResourcesProductionFilter.addMappingForUrlPatterns(disps, true, "/fonts/*");
-        staticResourcesProductionFilter.addMappingForUrlPatterns(disps, true, "/scripts/*");
-        staticResourcesProductionFilter.addMappingForUrlPatterns(disps, true, "/styles/*");
-        staticResourcesProductionFilter.addMappingForUrlPatterns(disps, true, "/views/*");
-        staticResourcesProductionFilter.setAsyncSupported(true);
+        urlRewriteFilter.addMappingForUrlPatterns(disps, true, "/*");
     }
 
     /**
@@ -207,7 +206,7 @@ public class WebConfigurer implements ServletContextInitializer {
         ServletRegistration.Dynamic metricsAdminServlet =
                 servletContext.addServlet("metricsServlet", new MetricsServlet());
 
-        metricsAdminServlet.addMapping("/metrics/metrics/*");
+        metricsAdminServlet.addMapping("/metrics/*");
         metricsAdminServlet.setAsyncSupported(true);
         metricsAdminServlet.setLoadOnStartup(2);
 
@@ -215,49 +214,8 @@ public class WebConfigurer implements ServletContextInitializer {
         ServletRegistration.Dynamic healthCheckServlet =
                 servletContext.addServlet("healthCheckServlet", new HealthCheckServlet());
 
-        healthCheckServlet.addMapping("/metrics/healthcheck/*");
+        healthCheckServlet.addMapping("/health/*");
         healthCheckServlet.setAsyncSupported(true);
         healthCheckServlet.setLoadOnStartup(2);
-    }<% if (websocket == 'atmosphere') { %>
-
-    /**
-     * Initializes Atmosphere.
-     */
-    private void initAtmosphereServlet(ServletContext servletContext) {
-        log.debug("Registering Atmosphere Servlet");
-        AtmosphereServlet servlet = new AtmosphereServlet();
-        Field frameworkField = ReflectionUtils.findField(AtmosphereServlet.class, "framework");
-        ReflectionUtils.makeAccessible(frameworkField);
-        ReflectionUtils.setField(frameworkField, servlet, new NoAnalyticsAtmosphereFramework());
-        ServletRegistration.Dynamic atmosphereServlet =
-                servletContext.addServlet("atmosphereServlet", servlet);
-
-        atmosphereServlet.setInitParameter("org.atmosphere.cpr.packages", "com.mycompany.myapp.web.websocket");
-        atmosphereServlet.setInitParameter("org.atmosphere.cpr.broadcasterCacheClass", UUIDBroadcasterCache.class.getName());
-        atmosphereServlet.setInitParameter("org.atmosphere.cpr.broadcaster.shareableThreadPool", "true");
-        atmosphereServlet.setInitParameter("org.atmosphere.cpr.broadcaster.maxProcessingThreads", "10");
-        atmosphereServlet.setInitParameter("org.atmosphere.cpr.broadcaster.maxAsyncWriteThreads", "10");
-
-        atmosphereServlet.addMapping("/websocket/*");
-        atmosphereServlet.setLoadOnStartup(3);
-        atmosphereServlet.setAsyncSupported(true);
     }
-
-    /**
-     * Atmosphere sends tracking data to Google Analytics, which is a potential security issue.
-     * <p>
-     * If you want to send this data, please use directly the AtmosphereFramework class.
-     * </p>
-     */
-    public class NoAnalyticsAtmosphereFramework extends AtmosphereFramework {
-
-        public NoAnalyticsAtmosphereFramework() {
-            super();
-        }
-
-        @Override
-        protected void analytics() {
-            // noop
-        }
-    }<% } %>
 }

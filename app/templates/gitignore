@@ -1,8 +1,9 @@
-target
 node
 node_modules
 .idea
 *.iml
+*.ipr
+*.iws
 .classpath
 .project
 .settings
@@ -10,4 +11,9 @@ node_modules
 .merge_file*
 .sass-cache
 .DS_Store
-src/main/webapp/dist
+build/
+out/
+*.sublime-project
+*..sublime-workspace
+src/main/resources/public/bower_components
+.gradle/

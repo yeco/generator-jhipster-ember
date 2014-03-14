@@ -1,20 +1,9 @@
-server:
-    port: 8080
-    address: localhost
-
 spring:
     profiles: dev
-    datasource:
-        dataSourceClassName: <% if (devDatabaseType == 'mysql') { %>com.mysql.jdbc.jdbc2.optional.MysqlDataSource<% } else if (devDatabaseType == 'postgresql') { %>org.postgresql.ds.PGSimpleDataSource<% } else { %>org.hsqldb.jdbc.JDBCDataSource<% } %>
-        url: <% if (devDatabaseType == 'mysql') { %>jdbc:mysql://localhost:3306/<%= baseName %><% } else if (devDatabaseType == 'postgresql') { %><% } else { %>jdbc:hsqldb:mem:<%= baseName %><% } %>
-        databaseName: <% if (devDatabaseType == 'postgresql') { %><%= baseName %><% } %>
-        serverName: <% if (devDatabaseType == 'postgresql') { %>localhost<% } %>
-        username: <% if (devDatabaseType == 'mysql') { %>root<% } else if (devDatabaseType == 'postgresql') { %><%= baseName %><% } %>
-        password:
 
     jpa:
-        database-platform: <% if (devDatabaseType == 'mysql') { %>org.hibernate.dialect.MySQLInnoDBDialect<% } else if (devDatabaseType == 'postgresql') { %>org.hibernate.dialect.PostgreSQLDialect<% } else { %>org.hibernate.dialect.HSQLDialect<% } %>
-        database: <% if (devDatabaseType == 'mysql') { %>MYSQL<% } else if (devDatabaseType == 'postgresql') { %>POSTGRESQL<% } else { %>HSQL<% } %>
+        database-platform: <% if (devDatabaseType == 'postgresql') { %><%=packageName%>.hibernate.CustomPostgreSQLDialect<% } else { %>org.hibernate.dialect.H2Dialect<% } %>
+        database: <% if (devDatabaseType == 'postgresql') { %>POSTGRESQL<% } else { %>H2<% } %>
         openInView: false
         show_sql: true
         generate-ddl: false
@@ -33,6 +22,10 @@ spring:
     thymeleaf:
         mode: XHTML
         cache: false
+
+database:
+    dataSourceClassName: <% if (devDatabaseType == 'postgresql') { %>org.postgresql.ds.PGSimpleDataSource<% } else { %>org.h2.jdbcx.JdbcDataSource<% } %>
+    url: <% if (devDatabaseType == 'postgresql') { %>postgres://<%= _.underscored(baseName) %>:<%= _.underscored(baseName) %>@localhost:5432/<%= _.underscored(baseName) %><% } else { %>h2://mem/<%= _.underscored(baseName) %><% } %>
 
 metrics:
     jmx.enabled: true

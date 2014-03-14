@@ -39,7 +39,7 @@ public final class SecurityUtils {
 
         if (authorities != null) {
             for (GrantedAuthority authority : authorities) {
-                if (authority.getAuthority().equals(AuthoritiesConstants.ANONYMOUS)) {
+                if (authority.getAuthority().equals("ANONYMOUS")) {
                     return false;
                 }
             }
