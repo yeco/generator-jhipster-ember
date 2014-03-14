@@ -12,8 +12,14 @@ import <%=packageName%>.web.filter.gzip.GZipServletFilter;
 import com.codahale.metrics.servlets.HealthCheckServlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.apache.catalina.connector.Connector;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
 import org.springframework.boot.context.embedded.ServletContextInitializer;
+import org.springframework.boot.context.embedded.tomcat.TomcatConnectorCustomizer;
+import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;<% if (clusteredHttpSession == 'hazelcast') { %>
 import org.springframework.web.context.support.WebApplicationContextUtils;<% } %>
@@ -44,6 +50,21 @@ public class WebConfigurer implements ServletContextInitializer {
 
     @Inject
     private HealthCheckRegistry healthCheckRegistry;
+
+    @Value("<%= _.unescape('\$\{server.port:9990}')%>")
+    private int port;
+
+    @Bean
+    public EmbeddedServletContainerFactory servletContainer() {
+        TomcatEmbeddedServletContainerFactory factory = new TomcatEmbeddedServletContainerFactory(this.port);
+        factory.addConnectorCustomizers(new TomcatConnectorCustomizer() {
+            @Override
+            public void customize(Connector connector) {
+                connector.setProperty("bindOnInit", "true");
+            }
+        });
+        return factory;
+    }
 
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
