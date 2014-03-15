@@ -29,6 +29,9 @@ task stage(dependsOn: 'assemble')
 
 repositories {
     maven {
+        url 'http://artifactory.edify.cr/artifactory/repo'
+    }
+    maven {
         url 'http://repo.spring.io/milestone'
     }
     maven {
@@ -81,7 +84,7 @@ dependencies {
     compile("com.stormpath.spring.security:stormpath-spring-security-core:0.2.0")
     compile("com.stormpath.sdk:stormpath-sdk-httpclient:0.9.2")
     compile("org.projectlombok:lombok:1.12.2")
-    compile("org.tuckey:urlrewritefilter:4.0.3")
+    compile("org.tuckey:urlrewritefilter:4.0.3")    
 
     // Database dependencies
     compile("org.postgresql:postgresql:9.3-1100-jdbc41")<% if (devDatabaseType != 'postgresql') { %>

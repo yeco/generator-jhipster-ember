@@ -8,7 +8,6 @@ import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.web.SessionListener;
 import com.hazelcast.web.WebFilter;<% } %>
 import <%=packageName%>.web.filter.CachingHttpHeadersFilter;
-import <%=packageName%>.web.filter.gzip.GZipServletFilter;
 import com.codahale.metrics.servlets.HealthCheckServlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +23,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;<% if (clusteredHttpSession == 'hazelcast') { %>
 import org.springframework.web.context.support.WebApplicationContextUtils;<% } %>
 import org.tuckey.web.filters.urlrewrite.UrlRewriteFilter;
+import org.tuckey.web.filters.urlrewrite.gzip.GzipFilter;
 
 import javax.inject.Inject;
 import javax.servlet.*;
@@ -76,6 +76,7 @@ public class WebConfigurer implements ServletContextInitializer {
         if (env.acceptsProfiles(Constants.SPRING_PROFILE_PRODUCTION)) {
             initUrlRewriteProductionFilter(servletContext, disps);
         }
+        initCachingHttpHeadersFilter(servletContext, disps);
         initGzipFilter(servletContext, disps);
 
         log.info("Web application fully configured");
@@ -142,7 +143,7 @@ public class WebConfigurer implements ServletContextInitializer {
     private void initGzipFilter(ServletContext servletContext, EnumSet<DispatcherType> disps) {
         log.debug("Registering GZip Filter");
 
-        FilterRegistration.Dynamic compressingFilter = servletContext.addFilter("gzipFilter", new GZipServletFilter());
+        FilterRegistration.Dynamic compressingFilter = servletContext.addFilter("gzipFilter", new GzipFilter());
         Map<String, String> parameters = new HashMap<>();
 
         compressingFilter.setInitParameters(parameters);
@@ -153,6 +154,7 @@ public class WebConfigurer implements ServletContextInitializer {
         compressingFilter.addMappingForUrlPatterns(disps, true, "*.js");
         compressingFilter.addMappingForUrlPatterns(disps, true, "/api/v1/*");
         compressingFilter.addMappingForUrlPatterns(disps, true, "/metrics/*");
+        compressingFilter.addMappingForUrlPatterns(disps, true, "/info");
 
         compressingFilter.setAsyncSupported(true);
     }
