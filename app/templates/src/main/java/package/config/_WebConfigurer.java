@@ -178,10 +178,12 @@ public class WebConfigurer implements ServletContextInitializer {
                 servletContext.addFilter("cachingHttpHeadersFilter",
                         new CachingHttpHeadersFilter());
 
-        cachingHttpHeadersFilter.addMappingForUrlPatterns(disps, true, "/images/*");
-        cachingHttpHeadersFilter.addMappingForUrlPatterns(disps, true, "/fonts/*");
-        cachingHttpHeadersFilter.addMappingForUrlPatterns(disps, true, "/scripts/*");
-        cachingHttpHeadersFilter.addMappingForUrlPatterns(disps, true, "/styles/*");
+        cachingHttpHeadersFilter.addMappingForUrlPatterns(disps, true, "*.woff");
+        cachingHttpHeadersFilter.addMappingForUrlPatterns(disps, true, "*.png");
+        cachingHttpHeadersFilter.addMappingForUrlPatterns(disps, true, "*.gif");
+        cachingHttpHeadersFilter.addMappingForUrlPatterns(disps, true, "*.jpg");
+        cachingHttpHeadersFilter.addMappingForUrlPatterns(disps, true, "*.css");
+        cachingHttpHeadersFilter.addMappingForUrlPatterns(disps, true, "*.js");
         cachingHttpHeadersFilter.setAsyncSupported(true);
     }
 
