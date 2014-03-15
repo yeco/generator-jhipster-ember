@@ -25,6 +25,8 @@ stormpath:
     key:
       id:
       secret:
+    file:
+      location: <%= _.unescape('\$\{HOME}/.config/stormpath/apiKey.properties')%>
 
 spring:
     mail:

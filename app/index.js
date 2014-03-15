@@ -88,22 +88,6 @@ JhipsterGenerator.prototype.askFor = function askFor() {
                 }
             ],
             default: 0
-        },
-        {
-            type: 'list',
-            name: 'devDatabaseType',
-            message: '(6/6) Which *development* database would you like to use?',
-            choices: [
-                {
-                    value: 'h2Memory',
-                    name: 'H2 in-memory'
-                },
-                {
-                    value: 'postgresql',
-                    name: 'PostgreSQL'
-                }
-            ],
-            default: 0
         }
     ];
 
@@ -113,8 +97,7 @@ JhipsterGenerator.prototype.askFor = function askFor() {
         this.packageName = props.packageName;
         this.baseName = props.baseName;
         this.hibernateCache = props.hibernateCache;
-        this.clusteredHttpSession = props.clusteredHttpSession;
-        this.devDatabaseType = props.devDatabaseType;
+        this.clusteredHttpSession = props.clusteredHttpSession;        
 
         cb();
     }.bind(this));

@@ -5,6 +5,7 @@ import com.stormpath.sdk.client.ClientBuilder;
 import com.stormpath.spring.security.cache.SpringCacheManager;
 import com.stormpath.spring.security.provider.DefaultGroupGrantedAuthorityResolver;
 import com.stormpath.spring.security.provider.StormpathAuthenticationProvider;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
@@ -20,6 +21,8 @@ public class StormpathConfiguration {
     private String stormpathApiKeyId;
     @Value("<%= _.unescape('\$\{stormpath.api.key.secret}')%>")
     private String stormpathApiKeySecret;
+    @Value("<%= _.unescape('\$\{stormpath.api.key.file.location}')%>")
+    private String stormpathApiKeyFileLocation;
     @Value("<%= _.unescape('\$\{stormpath.application.url}')%>")
     private String stormpathApplicationUrl;
 
@@ -28,9 +31,13 @@ public class StormpathConfiguration {
 
     @Bean
     public Client stormpathClient() {
-        return new ClientBuilder()
-                .setApiKey(stormpathApiKeyId, stormpathApiKeySecret)
-                .setCacheManager(new SpringCacheManager(cacheManager)).build();
+        final ClientBuilder clientBuilder = new ClientBuilder();
+        if (StringUtils.isNotEmpty(stormpathApiKeyFileLocation)) {
+            clientBuilder.setApiKeyFileLocation(stormpathApiKeyFileLocation);
+        } else {
+            clientBuilder.setApiKey(stormpathApiKeyId, stormpathApiKeySecret);
+        }
+        return clientBuilder.setCacheManager(new SpringCacheManager(cacheManager)).build();
     }
 
     @Bean
