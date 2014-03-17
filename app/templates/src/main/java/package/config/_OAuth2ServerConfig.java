@@ -1,9 +1,11 @@
 package <%=packageName%>.config;
 
 import <%=packageName%>.security.UserApprovalHandler;
+import <%=packageName%>.security.CustomTokenEnhancer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -37,9 +39,12 @@ public class OAuth2ServerConfig  {
     @Configuration
     @EnableResourceServer
     protected static class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
+        @Autowired
+        private JwtTokenServices jwtTokenServices;
+
         @Override
         public void configure(OAuth2ResourceServerConfigurer resources) {
-            resources.resourceId(RESOURCE_ID);
+            resources.resourceId(RESOURCE_ID).tokenServices(jwtTokenServices);
         }
 
         @Override
@@ -90,7 +95,8 @@ public class OAuth2ServerConfig  {
         public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
             clients.inMemory().withClient("web")
                     .resourceIds(RESOURCE_ID)
-                    .authorizedGrantTypes("password", "authorization_code", "implicit");
+                    .authorizedGrantTypes("password", "authorization_code", "implicit")
+                    .scopes("read,write");
         }
 
         public UserApprovalHandler userApprovalHandler() throws Exception {
@@ -108,10 +114,14 @@ public class OAuth2ServerConfig  {
             return store;
         }
 
-        private AuthorizationServerTokenServices tokenServices() {
+        @Bean
+        public JwtTokenServices tokenServices() {
             final JwtTokenServices jwtTokenServices = new JwtTokenServices();
             jwtTokenServices.setSigningKey(jwtTokenSigningKey);
             jwtTokenServices.setVerifierKey(jwtTokenSigningKey);
+            jwtTokenServices.setTokenEnhancer(new CustomTokenEnhancer());
+            jwtTokenServices.setClientDetailsService(clientDetailsService);
+            jwtTokenServices.setSupportRefreshToken(true);
             return jwtTokenServices;
         }
 

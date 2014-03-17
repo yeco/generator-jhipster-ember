@@ -23,10 +23,10 @@ stormpath:
     url:
   api:
     key:
+      file:
+        location: <%= _.unescape('\$\{HOME}/.config/stormpath/apiKey.properties')%>
       id:
       secret:
-    file:
-      location: <%= _.unescape('\$\{HOME}/.config/stormpath/apiKey.properties')%>
 
 spring:
     mail:

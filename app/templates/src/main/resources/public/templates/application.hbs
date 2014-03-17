@@ -1,0 +1,9 @@
+<div>
+    {{bs-notifications class='notifications' showTime='5000'}}
+
+    {{#if session.isAuthenticated}}
+        {{partial "partials/navigation"}}
+    {{/if}}
+
+    {{outlet}}
+</div>

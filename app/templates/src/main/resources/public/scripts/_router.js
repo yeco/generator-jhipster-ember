@@ -1,3 +1,11 @@
 <%= _.classify(appname) %>.Router.map(function () {
-  // Add your routes here
+    this.route('login', {
+        path: '/login'
+    });
+    this.route('index', {
+        path: '/'
+    });
+    this.route('forgot-password', {
+        path: '/forgot-password'
+    });
 });

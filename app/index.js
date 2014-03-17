@@ -97,7 +97,7 @@ JhipsterGenerator.prototype.askFor = function askFor() {
         this.packageName = props.packageName;
         this.baseName = props.baseName;
         this.hibernateCache = props.hibernateCache;
-        this.clusteredHttpSession = props.clusteredHttpSession;        
+        this.clusteredHttpSession = props.clusteredHttpSession;
 
         cb();
     }.bind(this));
@@ -195,6 +195,7 @@ JhipsterGenerator.prototype.app = function app() {
 
     this.template('src/main/java/package/security/_package-info.java', javaDir + 'security/package-info.java');
     this.template('src/main/java/package/security/_SecurityUtils.java', javaDir + 'security/SecurityUtils.java');
+    this.template('src/main/java/package/security/_CustomTokenEnhancer.java', javaDir + 'security/CustomTokenEnhancer.java');
     this.template('src/main/java/package/security/_UserApprovalHandler.java', javaDir + 'security/UserApprovalHandler.java');
 
     this.template('src/main/java/package/service/_package-info.java', javaDir + 'service/package-info.java');
@@ -209,11 +210,11 @@ JhipsterGenerator.prototype.app = function app() {
     this.template('src/main/java/package/web/propertyeditors/_LocaleDateTimeEditor.java', javaDir + 'web/propertyeditors/LocaleDateTimeEditor.java');
 
     this.template('src/main/java/package/web/rest/dto/_package-info.java', javaDir + 'web/rest/dto/package-info.java');
-    this.template('src/main/java/package/web/rest/dto/_LoggerDTO.java', javaDir + 'web/rest/dto/LoggerDTO.java');
-    this.template('src/main/java/package/web/rest/dto/_UserDTO.java', javaDir + 'web/rest/dto/UserDTO.java');
+    this.template('src/main/java/package/web/rest/dto/_LoggerDTO.java', javaDir + 'web/rest/dto/LoggerDTO.java');    
     this.template('src/main/java/package/web/rest/_package-info.java', javaDir + 'web/rest/package-info.java');
     this.template('src/main/java/package/web/rest/_AuditResource.java', javaDir + 'web/rest/AuditResource.java');
     this.template('src/main/java/package/web/rest/_LogsResource.java', javaDir + 'web/rest/LogsResource.java');
+    this.template('src/main/java/package/web/rest/_UserResource.java', javaDir + 'web/rest/UserResource.java');
 
     this.template('src/main/java/package/web/servlet/_package-info.java', javaDir + 'web/servlet/package-info.java');
     this.template('src/main/java/package/web/servlet/_HealthCheckServlet.java', javaDir + 'web/servlet/HealthCheckServlet.java');
@@ -235,6 +236,7 @@ JhipsterGenerator.prototype.app = function app() {
     this.mkdir(webappDir);
 
     this.copy(webappDir + 'styles/main.less', webappDir + 'styles/main.less');
+    this.copy(webappDir + 'styles/login.less', webappDir + 'styles/login.less');
     this.copy(webappDir + 'fonts/glyphicons-halflings-regular.eot', webappDir + 'fonts/glyphicons-halflings-regular.eot');
     this.copy(webappDir + 'fonts/glyphicons-halflings-regular.svg', webappDir + 'fonts/glyphicons-halflings-regular.svg');
     this.copy(webappDir + 'fonts/glyphicons-halflings-regular.ttf', webappDir + 'fonts/glyphicons-halflings-regular.ttf');
@@ -258,8 +260,17 @@ JhipsterGenerator.prototype.app = function app() {
     this.template(webappDir + 'scripts/_app.js', webappDir + 'scripts/app.js');
     this.template(webappDir + 'scripts/_router.js', webappDir + 'scripts/router.js');
     this.template(webappDir + 'scripts/_store.js', webappDir + 'scripts/store.js');
+    this.template(webappDir + 'scripts/_auth.js', webappDir + 'scripts/auth.js');
+
+    this.template(webappDir + 'scripts/controllers/_login_controller.js', webappDir + 'scripts/controllers/login_controller.js');
+    this.template(webappDir + 'scripts/models/_user_model.js', webappDir + 'scripts/models/user_model.js');
+    this.template(webappDir + 'scripts/routes/_application_route.js', webappDir + 'scripts/routes/application_route.js');
+    this.template(webappDir + 'scripts/routes/_index_route.js', webappDir + 'scripts/routes/index_route.js');
 
     this.copy(webappDir + 'templates/index.hbs', webappDir + 'templates/index.hbs');
+    this.copy(webappDir + 'templates/login.hbs', webappDir + 'templates/login.hbs');
+    this.copy(webappDir + 'templates/application.hbs', webappDir + 'templates/application.hbs');
+    this.template(webappDir + 'templates/partials/_navigation.hbs', webappDir + 'templates/partials/navigation.hbs');
 
     // Create Test Javascript files
     var testJsDir = 'src/test/javascript/';
