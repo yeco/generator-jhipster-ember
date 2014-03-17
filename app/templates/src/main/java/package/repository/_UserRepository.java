@@ -61,7 +61,7 @@ public class UserRepository implements PagingAndSortingRepository<User, String> 
     }
 
     @Override
-    public boolean exists(String s) {
+    public boolean exists(String id) {
         return findOne(id) != null;
     }
 
