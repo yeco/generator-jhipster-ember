@@ -7,9 +7,8 @@
                 self.transitionTo(Ember.SimpleAuth.routeAfterAuthentication);
             });
         },
-        sessionAuthenticationFailed: function (response) {
-            var errorMessage = JSON.parse(response).message;
-            Bootstrap.NM.push(errorMessage, 'danger');
+        sessionAuthenticationFailed: function () {
+            Bootstrap.NM.push('Invalid username or password.', 'danger');
             this.transitionTo(Ember.SimpleAuth.routeAfterInvalidation);
         }
     }

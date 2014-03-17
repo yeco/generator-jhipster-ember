@@ -130,6 +130,7 @@ public class OAuth2ServerConfig  {
             oauthServer
                     .tokenStore(tokenStore)
                     .tokenService(tokenServices())
+                    .allowFormAuthenticationForClients()
                     .userApprovalHandler(userApprovalHandler())
                     .authenticationManager(authenticationManager).realm("<%=baseName%>/client");
         }

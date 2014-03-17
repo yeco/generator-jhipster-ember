@@ -5,7 +5,4 @@
     this.route('index', {
         path: '/'
     });
-    this.route('forgot-password', {
-        path: '/forgot-password'
-    });
 });

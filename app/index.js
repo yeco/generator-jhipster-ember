@@ -186,12 +186,19 @@ JhipsterGenerator.prototype.app = function app() {
     this.template('src/main/java/package/domain/_package-info.java', javaDir + 'domain/package-info.java');
     this.template('src/main/java/package/domain/_PersistentAuditEvent.java', javaDir + 'domain/PersistentAuditEvent.java');
     this.template('src/main/java/package/domain/_Base.java', javaDir + 'domain/Base.java');
+    this.template('src/main/java/package/domain/_User.java', javaDir + 'domain/User.java');
+    this.template('src/main/java/package/domain/_Resource.java', javaDir + 'domain/Resource.java');
     this.template('src/main/java/package/domain/util/_CustomLocalDateSerializer.java', javaDir + 'domain/util/CustomLocalDateSerializer.java');
+    this.template('src/main/java/package/domain/util/_CustomPage.java', javaDir + 'domain/util/CustomPage.java');
+    this.template('src/main/java/package/domain/util/_CustomPageSerializer.java', javaDir + 'domain/util/CustomPageSerializer.java');
+    this.template('src/main/java/package/domain/util/_JsonList.java', javaDir + 'domain/util/JsonList.java');
+    this.template('src/main/java/package/domain/util/_JsonListSerializer.java', javaDir + 'domain/util/JsonListSerializer.java');
 
     this.template('src/main/java/package/hibernate/_CustomPostgreSQLDialect.java', javaDir + 'hibernate/CustomPostgreSQLDialect.java');
 
     this.template('src/main/java/package/repository/_package-info.java', javaDir + 'repository/package-info.java');
     this.template('src/main/java/package/repository/_PersistenceAuditEventRepository.java', javaDir + 'repository/PersistenceAuditEventRepository.java');
+    this.template('src/main/java/package/repository/_UserRepository.java', javaDir + 'repository/UserRepository.java');
 
     this.template('src/main/java/package/security/_package-info.java', javaDir + 'security/package-info.java');
     this.template('src/main/java/package/security/_SecurityUtils.java', javaDir + 'security/SecurityUtils.java');
@@ -210,11 +217,13 @@ JhipsterGenerator.prototype.app = function app() {
     this.template('src/main/java/package/web/propertyeditors/_LocaleDateTimeEditor.java', javaDir + 'web/propertyeditors/LocaleDateTimeEditor.java');
 
     this.template('src/main/java/package/web/rest/dto/_package-info.java', javaDir + 'web/rest/dto/package-info.java');
-    this.template('src/main/java/package/web/rest/dto/_LoggerDTO.java', javaDir + 'web/rest/dto/LoggerDTO.java');    
+    this.template('src/main/java/package/web/rest/dto/_LoggerDTO.java', javaDir + 'web/rest/dto/LoggerDTO.java');
     this.template('src/main/java/package/web/rest/_package-info.java', javaDir + 'web/rest/package-info.java');
     this.template('src/main/java/package/web/rest/_AuditResource.java', javaDir + 'web/rest/AuditResource.java');
     this.template('src/main/java/package/web/rest/_LogsResource.java', javaDir + 'web/rest/LogsResource.java');
     this.template('src/main/java/package/web/rest/_UserResource.java', javaDir + 'web/rest/UserResource.java');
+    this.template('src/main/java/package/web/rest/_AbstractRestResource.java', javaDir + 'web/rest/AbstractRestResource.java');
+    this.template('src/main/java/package/web/rest/_RestError.java', javaDir + 'web/rest/RestError.java');
 
     this.template('src/main/java/package/web/servlet/_package-info.java', javaDir + 'web/servlet/package-info.java');
     this.template('src/main/java/package/web/servlet/_HealthCheckServlet.java', javaDir + 'web/servlet/HealthCheckServlet.java');
