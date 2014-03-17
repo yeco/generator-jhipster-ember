@@ -51,7 +51,6 @@ public class OAuth2ServerConfig  {
         public void configure(HttpSecurity http) throws Exception {
             //@formatter:off
             http.authorizeRequests()
-                    .expressionHandler(new OAuth2WebSecurityExpressionHandler())
                     .antMatchers("/health", "/info", "/index.html", "/scripts/**", "/styles/**", "/images/**").permitAll()
                     .antMatchers("/env").access("#oauth2.denyOAuthClient() and hasRole('USER,ADMIN') or #oauth2.hasScope('read')")
                     .antMatchers("/trace").access("#oauth2.denyOAuthClient() and hasRole('USER,ADMIN') or #oauth2.hasScope('read')")
@@ -62,11 +61,7 @@ public class OAuth2ServerConfig  {
                     .antMatchers("/metrics/**").access("#oauth2.denyOAuthClient() and hasRole('USER,ADMIN') or #oauth2.hasScope('read')")
                     .antMatchers("/api/v1/**").access("#oauth2.denyOAuthClient() and hasRole('USER') or #oauth2.hasScope('read,write')")
                 .and()
-                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER)
-                .and()
-                    .exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler())
-                .and()
-                    .csrf().requireCsrfProtectionMatcher(new AntPathRequestMatcher("/oauth/**")).disable();
+                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER);
              //@formatter:on
         }
     }
@@ -130,7 +125,6 @@ public class OAuth2ServerConfig  {
             oauthServer
                     .tokenStore(tokenStore)
                     .tokenService(tokenServices())
-                    .allowFormAuthenticationForClients()
                     .userApprovalHandler(userApprovalHandler())
                     .authenticationManager(authenticationManager).realm("<%=baseName%>/client");
         }

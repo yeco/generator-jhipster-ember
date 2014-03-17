@@ -37,6 +37,7 @@ Ember.Application.initializer({
             Ember.$.ajax({
                 url: ENV.api_token_endpoint,
                 type: 'POST',
+                headers: {"Authorization": "Basic d2ViOg=="},
                 data: {
                     client_id: 'web',
                     grant_type: 'password',
