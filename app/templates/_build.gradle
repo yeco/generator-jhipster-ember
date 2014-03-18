@@ -25,18 +25,6 @@ springBoot {
     backupSource = false
 }
 
-idea {
-    project {
-        ipr {
-            withXml {
-                def project = it.asNode()
-                def compilerConfigurationComponent = project.component.find {it.@name == 'CompilerConfiguration'}
-                compilerConfigurationComponent.annotationProcessing.profile.@enabled = 'true'
-            }
-        }
-    }
-}
-
 task stage(dependsOn: 'assemble')
 
 repositories {

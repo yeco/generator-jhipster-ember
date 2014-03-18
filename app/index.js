@@ -120,6 +120,7 @@ JhipsterGenerator.prototype.app = function app() {
 
     var packageFolder = this.packageName.replace(/\./g, '/');
     this.template('_build.gradle', 'build.gradle');
+    this.template('_settings.gradle', 'settings.gradle');
 
     // Create Java resource files
     var resourceDir = 'src/main/resources/';
