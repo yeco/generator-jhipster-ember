@@ -1,0 +1,45 @@
+<div>
+    <h2>Logger Level Config</h2>
+</div>
+
+<table class="table table-condensed table-striped table-bordered table-responsive">
+    <thead>
+    <tr title="click to order">
+        <th>Logger Name</th>
+        <th>Level</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each}}
+        <tr>
+            <td>
+                <small>{{id}}</small>
+            </td>
+            <td>
+                <button {{action 'update' this 'TRACE'}} {{bind-attr class="isTraceLvl:btn-danger:btn-default :btn :btn-xs"}}>
+                    TRACE
+                </button>
+                <button {{action 'update' this 'DEBUG'}} {{bind-attr class="isDebugLvl:btn-warning:btn-default :btn :btn-xs"}}>
+                    DEBUG
+                </button>
+                <button {{action 'update' this 'INFO'}} {{bind-attr class="isInfoLvl:btn-info:btn-default :btn :btn-xs"}}>
+                    INFO
+                </button>
+                <button {{action 'update' this 'WARN'}} {{bind-attr class="isWarnLvl:btn-warning:btn-default :btn :btn-xs"}}>
+                    WARN
+                </button>
+                <button {{action 'update' this 'ERROR'}} {{bind-attr class="isErrorLvl:btn-danger:btn-default :btn :btn-xs"}}>
+                    ERROR
+                </button>
+            </td>
+        </tr>
+    {{/each}}
+    </tbody>
+</table>
+<div class="text-center">
+    <ul class="pager">
+        <li {{bind-attr class="isFirstPage:disabled"}}><a href="#" {{action 'previousPage'}}>&larr; Previous</a></li>
+        <li>{{currentPage}} of {{totalPages}}</li>
+        <li {{bind-attr class="isLastPage:disabled"}}><a href="#" {{action 'nextPage'}}>Next &rarr;</a></li>
+    </ul>
+</div>

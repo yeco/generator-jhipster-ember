@@ -188,17 +188,18 @@ JhipsterGenerator.prototype.app = function app() {
     this.template('src/main/java/package/domain/_Base.java', javaDir + 'domain/Base.java');
     this.template('src/main/java/package/domain/_User.java', javaDir + 'domain/User.java');
     this.template('src/main/java/package/domain/_Resource.java', javaDir + 'domain/Resource.java');
+    this.template('src/main/java/package/domain/_Logger.java', javaDir + 'domain/Logger.java');
     this.template('src/main/java/package/domain/util/_CustomLocalDateSerializer.java', javaDir + 'domain/util/CustomLocalDateSerializer.java');
     this.template('src/main/java/package/domain/util/_CustomPage.java', javaDir + 'domain/util/CustomPage.java');
     this.template('src/main/java/package/domain/util/_CustomPageSerializer.java', javaDir + 'domain/util/CustomPageSerializer.java');
-    this.template('src/main/java/package/domain/util/_JsonList.java', javaDir + 'domain/util/JsonList.java');
-    this.template('src/main/java/package/domain/util/_JsonListSerializer.java', javaDir + 'domain/util/JsonListSerializer.java');
+    this.template('src/main/java/package/domain/util/_EntityWrapper.java', javaDir + 'domain/util/EntityWrapper.java');
 
     this.template('src/main/java/package/hibernate/_CustomPostgreSQLDialect.java', javaDir + 'hibernate/CustomPostgreSQLDialect.java');
 
     this.template('src/main/java/package/repository/_package-info.java', javaDir + 'repository/package-info.java');
     this.template('src/main/java/package/repository/_PersistenceAuditEventRepository.java', javaDir + 'repository/PersistenceAuditEventRepository.java');
     this.template('src/main/java/package/repository/_UserRepository.java', javaDir + 'repository/UserRepository.java');
+    this.template('src/main/java/package/repository/_LoggerRepository.java', javaDir + 'repository/LoggerRepository.java');
 
     this.template('src/main/java/package/security/_package-info.java', javaDir + 'security/package-info.java');
     this.template('src/main/java/package/security/_SecurityUtils.java', javaDir + 'security/SecurityUtils.java');
@@ -216,8 +217,6 @@ JhipsterGenerator.prototype.app = function app() {
     this.template('src/main/java/package/web/propertyeditors/_package-info.java', javaDir + 'web/propertyeditors/package-info.java');
     this.template('src/main/java/package/web/propertyeditors/_LocaleDateTimeEditor.java', javaDir + 'web/propertyeditors/LocaleDateTimeEditor.java');
 
-    this.template('src/main/java/package/web/rest/dto/_package-info.java', javaDir + 'web/rest/dto/package-info.java');
-    this.template('src/main/java/package/web/rest/dto/_LoggerDTO.java', javaDir + 'web/rest/dto/LoggerDTO.java');
     this.template('src/main/java/package/web/rest/_package-info.java', javaDir + 'web/rest/package-info.java');
     this.template('src/main/java/package/web/rest/_AuditResource.java', javaDir + 'web/rest/AuditResource.java');
     this.template('src/main/java/package/web/rest/_LogsResource.java', javaDir + 'web/rest/LogsResource.java');
@@ -270,14 +269,19 @@ JhipsterGenerator.prototype.app = function app() {
     this.template(webappDir + 'scripts/_router.js', webappDir + 'scripts/router.js');
     this.template(webappDir + 'scripts/_store.js', webappDir + 'scripts/store.js');
     this.template(webappDir + 'scripts/_auth.js', webappDir + 'scripts/auth.js');
+    this.copy(webappDir + 'scripts/helpers.js', webappDir + 'scripts/helpers.js');
 
     this.template(webappDir + 'scripts/controllers/_login_controller.js', webappDir + 'scripts/controllers/login_controller.js');
+    this.template(webappDir + 'scripts/controllers/_logs_config_controller.js', webappDir + 'scripts/controllers/logs_config_controller.js');
     this.template(webappDir + 'scripts/models/_user_model.js', webappDir + 'scripts/models/user_model.js');
+    this.template(webappDir + 'scripts/models/_logger_model.js', webappDir + 'scripts/models/logger_model.js');
     this.template(webappDir + 'scripts/routes/_application_route.js', webappDir + 'scripts/routes/application_route.js');
     this.template(webappDir + 'scripts/routes/_index_route.js', webappDir + 'scripts/routes/index_route.js');
+    this.template(webappDir + 'scripts/routes/_logs_config_route.js', webappDir + 'scripts/routes/logs_config_route.js');
 
     this.copy(webappDir + 'templates/index.hbs', webappDir + 'templates/index.hbs');
     this.copy(webappDir + 'templates/login.hbs', webappDir + 'templates/login.hbs');
+    this.copy(webappDir + 'templates/logs_config.hbs', webappDir + 'templates/logs_config.hbs');
     this.copy(webappDir + 'templates/application.hbs', webappDir + 'templates/application.hbs');
     this.template(webappDir + 'templates/partials/_navigation.hbs', webappDir + 'templates/partials/navigation.hbs');
 

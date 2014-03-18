@@ -2,7 +2,7 @@ package <%=packageName%>.web.rest;
 
 import <%=packageName%>.domain.Resource;
 import <%=packageName%>.domain.util.CustomPage;
-import <%=packageName%>.domain.util.JsonList;
+import <%=packageName%>.domain.util.EntityWrapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -20,8 +20,10 @@ import java.io.Serializable;
 /**
  *
  */
-public abstract class AbstractRestResource<E extends Resource<ID>, ID extends Serializable> {
+public abstract class AbstractRestResource<E extends Resource<ID>, ID extends Serializable, EW extends EntityWrapper<E>> {
     protected abstract Class<E> entityClass();
+
+    protected abstract EW entityWrapper(E entity);
 
     protected abstract PagingAndSortingRepository<E, ID> repository();
 
@@ -35,32 +37,33 @@ public abstract class AbstractRestResource<E extends Resource<ID>, ID extends Se
         return new ResponseEntity<>(customPage, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<JsonList<E>> findOne(@PathVariable("id") ID id) throws Exception {
+    @RequestMapping(value = "/{id:.+}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<EW> findOne(@PathVariable("id") ID id) throws Exception {
         if (repository().exists(id)) {
-            return new ResponseEntity<>(new JsonList<>(entityClass(), repository().findOne(id)), HttpStatus.OK);
+            return new ResponseEntity<>(entityWrapper(repository().findOne(id)), HttpStatus.OK);
         } else {
             throw new EntityNotFoundException(entityClass().getSimpleName());
         }
     }
 
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<JsonList<E>> create(@RequestBody @Valid E v) throws Exception {
-        return new ResponseEntity<>(new JsonList<>(entityClass(), repository().save(v)), HttpStatus.CREATED);
+    public ResponseEntity<EW> create(@RequestBody @Valid EW v) throws Exception {
+        return new ResponseEntity<>(entityWrapper(repository().save(v.getEntity())), HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<JsonList<E>> update(@PathVariable("id") ID id, @RequestBody @Valid E v) throws Exception {
+    @RequestMapping(value = "/{id:.+}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<EW> update(@PathVariable("id") ID id, @RequestBody @Valid EW v) throws Exception {
+        E entity = v.getEntity();
         if (repository().exists(id)) {
             //Ensure the id is set
-            v.setId(id);
-            return new ResponseEntity<>(new JsonList<>(entityClass(), repository().save(v)), HttpStatus.OK);
+            entity.setId(id);
+            return new ResponseEntity<>(entityWrapper(repository().save(entity)), HttpStatus.OK);
         } else {
             throw new EntityNotFoundException(entityClass().getSimpleName());
         }
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{id:.+}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> delete(@PathVariable("id") ID id) throws Exception {
         if (repository().exists(id)) {
             repository().delete(id);

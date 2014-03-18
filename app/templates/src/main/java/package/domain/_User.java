@@ -1,7 +1,11 @@
 package <%=packageName%>.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.mycompany.myapp.domain.util.EntityWrapper;
 import com.stormpath.sdk.account.Account;
 import lombok.Data;
+
+import javax.validation.Valid;
 
 /**
  *
@@ -25,5 +29,21 @@ public class User implements Resource<String> {
         this.username = account.getUsername();
         this.name = account.getFullName();
         this.email = account.getEmail();
+    }
+
+    @Data
+    public static class UserWrapper implements EntityWrapper<User> {
+        @Valid
+        private User user;
+
+        public UserWrapper(User user) {
+            this.user = user;
+        }
+
+        @JsonIgnore
+        @Override
+        public User getEntity() {
+            return user;
+        }
     }
 }
