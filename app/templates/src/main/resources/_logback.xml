@@ -9,11 +9,10 @@
     <logger name="com.ryantenney" level="WARN"/>
     <logger name="com.zaxxer" level="WARN"/>
     <logger name="org.apache" level="WARN"/>
-    <logger name="org.apache.catalina.startup.DigesterFactory" level="OFF"/>
+    <logger name="org.apache.tomcat.util.descriptor.DigesterFactory" level="OFF"/>
     <logger name="org.hibernate.validator" level="WARN"/>
     <logger name="org.hibernate" level="WARN"/>
-    <logger name="org.hibernate.ejb.HibernatePersistence" level="OFF"/>
-    <logger name="org.atmosphere" level="WARN"/>
+    <logger name="org.hibernate.ejb.HibernatePersistenceProvider" level="OFF"/>
     <logger name="org.springframework" level="WARN"/>
     <logger name="org.springframework.web" level="WARN"/>
     <logger name="org.springframework.security" level="WARN"/>
