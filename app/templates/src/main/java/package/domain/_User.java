@@ -1,7 +1,7 @@
 package <%=packageName%>.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.mycompany.myapp.domain.util.EntityWrapper;
+import <%=packageName%>.domain.util.EntityWrapper;
 import com.stormpath.sdk.account.Account;
 import lombok.Data;
 

@@ -45,7 +45,7 @@ JhipsterGenerator.prototype.askFor = function askFor() {
             type: 'input',
             name: 'baseName',
             message: '(1/6) What is the base name of your application?',
-            default: 'jhipster-ng'
+            default: 'jhipster-ember'
         },
         {
             type: 'input',
