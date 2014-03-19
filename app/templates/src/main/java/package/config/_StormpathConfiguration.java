@@ -20,13 +20,13 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class StormpathConfiguration {
-    private static final String APP_NAME = "jhipster-ng";
+    private static final String APP_NAME = "<%=baseName%>";
 
-    @Value("${stormpath.api.key.id}")
+    @Value("<%= _.unescape('\$\{stormpath.api.key.id}')%>")
     private String stormpathApiKeyId;
-    @Value("${stormpath.api.key.secret}")
+    @Value("<%= _.unescape('\$\{stormpath.api.key.secret}')%>")
     private String stormpathApiKeySecret;
-    @Value("${stormpath.api.key.file.location}")
+    @Value("<%= _.unescape('\$\{stormpath.api.key.file.location}')%>")
     private String stormpathApiKeyFileLocation;
 
     @Autowired
