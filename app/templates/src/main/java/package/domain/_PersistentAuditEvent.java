@@ -1,9 +1,7 @@
 package <%=packageName%>.domain;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;<% if (hibernateCache != 'no') { %>
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;<% } %>
+import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.Type;
 import org.joda.time.LocalDateTime;
 
@@ -20,8 +18,7 @@ import java.util.Map;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "audit_events")<% if (hibernateCache != 'no') { %>
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)<% } %>
+@Table(name = "audit_events")
 public class PersistentAuditEvent extends Base {
     @NotNull
     @Column(name = "principal")

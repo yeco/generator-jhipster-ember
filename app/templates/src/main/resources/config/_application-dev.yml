@@ -11,13 +11,7 @@ spring:
             ddl-auto: none
             naming-strategy: org.hibernate.cfg.EJB3NamingStrategy
         properties:
-            hibernate.cache.use_second_level_cache: <% if (hibernateCache == 'ehcache' || hibernateCache == 'hazelcast') { %>true<% } else { %>false<% } %>
-            hibernate.cache.use_query_cache: false
-            hibernate.generate_statistics: true<% if (hibernateCache == 'ehcache') { %>
-            hibernate.cache.region.factory_class: org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory<% } else if (hibernateCache == 'hazelcast') { %>
-            hibernate.cache.region.factory_class: <%=packageName%>.config.hazelcast.HazelcastCacheRegionFactory<% } %><% if (hibernateCache == 'hazelcast') { %>
-            hibernate.cache.use_minimal_puts: true
-            hibernate.cache.hazelcast.use_lite_member: true<% } %>
+            hibernate.generate_statistics: true
 
     thymeleaf:
         mode: XHTML
@@ -29,12 +23,3 @@ database:
 
 metrics:
     jmx.enabled: true
-
-<% if (clusteredHttpSession == 'hazelcast' || hibernateCache == 'hazelcast' || hibernateCache == 'ehcache') { %>cache:
-    timeToLiveSeconds: 3600<% } if (clusteredHttpSession == 'hazelcast' || hibernateCache == 'hazelcast') { %>
-    hazelcast:
-        debug: true
-        stickySession: false
-        backupCount: 1<% } if (hibernateCache == 'ehcache') { %>
-    ehcache:
-        maxBytesLocalHeap: 16M<% } %>

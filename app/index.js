@@ -52,42 +52,6 @@ JhipsterGenerator.prototype.askFor = function askFor() {
             name: 'packageName',
             message: '(2/6) What is your default Java package name?',
             default: 'com.mycompany.myapp'
-        },
-        {
-            type: 'list',
-            name: 'hibernateCache',
-            message: '(3/6) Do you want to use Hibernate 2nd level cache?',
-            choices: [
-                {
-                    value: 'no',
-                    name: 'No'
-                },
-                {
-                    value: 'ehcache',
-                    name: 'Yes, with ehcache (local cache, for a single node)'
-                },
-                {
-                    value: 'hazelcast',
-                    name: 'Yes, with HazelCast (distributed cache, for multiple nodes)'
-                }
-            ],
-            default: 0
-        },
-        {
-            type: 'list',
-            name: 'clusteredHttpSession',
-            message: '(4/6) Do you want to use clustered HTTP sessions?',
-            choices: [
-                {
-                    value: 'no',
-                    name: 'No'
-                },
-                {
-                    value: 'hazelcast',
-                    name: 'Yes, with HazelCast'
-                }
-            ],
-            default: 0
         }
     ];
 
@@ -96,9 +60,6 @@ JhipsterGenerator.prototype.askFor = function askFor() {
         this.springSecurityVersion = props.springSecurityVersion;
         this.packageName = props.packageName;
         this.baseName = props.baseName;
-        this.hibernateCache = props.hibernateCache;
-        this.clusteredHttpSession = props.clusteredHttpSession;
-
         cb();
     }.bind(this));
 };
@@ -126,10 +87,6 @@ JhipsterGenerator.prototype.app = function app() {
     // Create Java resource files
     var resourceDir = 'src/main/resources/';
     this.mkdir(resourceDir);
-
-    if (this.hibernateCache == "ehcache") {
-        this.template(resourceDir + '_ehcache.xml', resourceDir + 'ehcache.xml');
-    }
 
     // i18n resources used by thymeleaf
     this.copy(resourceDir + '/i18n/messages_en.properties', resourceDir + 'i18n/messages_en.properties');
@@ -173,11 +130,6 @@ JhipsterGenerator.prototype.app = function app() {
     this.template('src/main/java/package/config/metrics/_package-info.java', javaDir + 'config/metrics/package-info.java');
     this.template('src/main/java/package/config/metrics/_DatabaseHealthCheck.java', javaDir + 'config/metrics/DatabaseHealthCheck.java');
     this.template('src/main/java/package/config/metrics/_JavaMailHealthCheck.java', javaDir + 'config/metrics/JavaMailHealthCheck.java');
-
-    if (this.hibernateCache == "hazelcast") {
-        this.template('src/main/java/package/config/hazelcast/_HazelcastCacheRegionFactory.java', javaDir + 'config/hazelcast/HazelcastCacheRegionFactory.java');
-        this.template('src/main/java/package/config/hazelcast/_package-info.java', javaDir + 'config/hazelcast/package-info.java');
-    }
 
     this.template('src/main/java/package/config/reload/_package-info.java', javaDir + 'config/reload/package-info.java');
     this.template('src/main/java/package/config/reload/_JHipsterFileSystemWatcher.java', javaDir + 'config/reload/JHipsterFileSystemWatcher.java');
@@ -237,10 +189,6 @@ JhipsterGenerator.prototype.app = function app() {
     //this.template(testResourceDir + 'config/_application.yml', testResourceDir + 'config/application.yml');
     //this.template(testResourceDir + '_logback.xml', testResourceDir + 'logback.xml');
 
-    //if (this.hibernateCache == "ehcache") {
-    //    this.template(testResourceDir + '_ehcache.xml', testResourceDir + 'ehcache.xml');
-    //}
-
     // Create Webapp
     var webappDir = 'src/main/resources/public/';
     this.mkdir(webappDir);
@@ -297,7 +245,6 @@ JhipsterGenerator.prototype.app = function app() {
     this.config.set('baseName', this.baseName);
     this.config.set('packageName', this.packageName);
     this.config.set('packageFolder', packageFolder);
-    this.config.set('hibernateCache', this.hibernateCache);
 };
 
 JhipsterGenerator.prototype.projectfiles = function projectfiles() {
