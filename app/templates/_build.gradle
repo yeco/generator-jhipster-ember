@@ -14,9 +14,6 @@ apply plugin: 'idea'
 apply plugin: 'java'
 apply plugin: 'spring-boot'
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
 jar {
     baseName = '<%= _.slugify(baseName) %>'
 }
@@ -37,27 +34,20 @@ repositories {
     mavenCentral()
 }
 
-def versions = [<% if (hibernateCache == 'hazelcast') { %>
-    hazelcast: '3.1.5',<% } %>
-    codahale_metrics: '3.0.2',
-    jackson: '2.3.0',
-    spring_boot: '1.0.0.RC4'
-]
-
 dependencies {
-    compile("com.codahale.metrics:metrics-graphite:<%= _.unescape('\$\{versions.codahale_metrics}')%>")
-    compile("com.codahale.metrics:metrics-jvm:<%= _.unescape('\$\{versions.codahale_metrics}')%>")
-    compile("com.codahale.metrics:metrics-servlet:<%= _.unescape('\$\{versions.codahale_metrics}')%>")
-    compile("com.codahale.metrics:metrics-servlets:<%= _.unescape('\$\{versions.codahale_metrics}')%>")<% if (hibernateCache == 'ehcache') { %>
-    compile("com.codahale.metrics:metrics-ehcache:<%= _.unescape('\$\{versions.codahale_metrics}')%>")<% } %>
-    compile("com.fasterxml.jackson.datatype:jackson-datatype-hppc:<%= _.unescape('\$\{versions.jackson}')%>")
-    compile("com.fasterxml.jackson.datatype:jackson-datatype-joda:<%= _.unescape('\$\{versions.jackson}')%>")<% if (hibernateCache == 'hazelcast') { %>
+    compile("com.codahale.metrics:metrics-graphite:<%= _.unescape('\$\{codahaleMetricsVersion}')%>")
+    compile("com.codahale.metrics:metrics-jvm:<%= _.unescape('\$\{codahaleMetricsVersion}')%>")
+    compile("com.codahale.metrics:metrics-servlet:<%= _.unescape('\$\{codahaleMetricsVersion}')%>")
+    compile("com.codahale.metrics:metrics-servlets:<%= _.unescape('\$\{codahaleMetricsVersion}')%>")<% if (hibernateCache == 'ehcache') { %>
+    compile("com.codahale.metrics:metrics-ehcache:<%= _.unescape('\$\{codahaleMetricsVersion}')%>")<% } %>
+    compile("com.fasterxml.jackson.datatype:jackson-datatype-hppc:<%= _.unescape('\$\{jacksonVersion}')%>")
+    compile("com.fasterxml.jackson.datatype:jackson-datatype-joda:<%= _.unescape('\$\{jacksonVersion}')%>")<% if (hibernateCache == 'hazelcast') { %>
     compile("com.hazelcast:hazelcast:<%= _.unescape('\$\{versions.hazelcast}')%>")
     compile("com.hazelcast:hazelcast-hibernate4:<%= _.unescape('\$\{versions.hazelcast}')%>")
     compile("com.hazelcast:hazelcast-spring:<%= _.unescape('\$\{versions.hazelcast}')%>")
-    compile("com.hazelcast:hazelcast:<%= _.unescape('\$\{versions.hazelcast}')%>")<% } %><% if (clusteredHttpSession == 'hazelcast' && hibernateCache != 'hazelcast') { %>
-    compile("com.hazelcast:hazelcast:<%= _.unescape('\$\{versions.hazelcast}')%>")<% } %><% if (clusteredHttpSession == 'hazelcast') { %>
-    compile("com.hazelcast:hazelcast-wm:<%= _.unescape('\$\{versions.hazelcast}')%>")<% } %>
+    compile("com.hazelcast:hazelcast:<%= _.unescape('\$\{hazelcastVersion}')%>")<% } %><% if (clusteredHttpSession == 'hazelcast' && hibernateCache != 'hazelcast') { %>
+    compile("com.hazelcast:hazelcast:<%= _.unescape('\$\{hazelcastVersion}')%>")<% } %><% if (clusteredHttpSession == 'hazelcast') { %>
+    compile("com.hazelcast:hazelcast-wm:<%= _.unescape('\$\{hazelcastVersion}')%>")<% } %>
     compile("com.ryantenney.metrics:metrics-spring:3.0.0-RC4")
     compile("com.zaxxer:HikariCP:1.3.0")
     compile("commons-lang:commons-lang:2.6")
@@ -69,11 +59,11 @@ dependencies {
     compile("org.hibernate:hibernate-ehcache:4.3.1.Final")<% } %>
     compile("org.hibernate:hibernate-validator:5.1.0.CR1")
     compile("org.liquibase:liquibase-core:3.1.1")
-    compile("org.springframework.boot:spring-boot-starter-web:<%= _.unescape('\$\{versions.spring_boot}')%>")
-    compile("org.springframework.boot:spring-boot-starter-actuator:<%= _.unescape('\$\{versions.spring_boot}')%>")
-    compile("org.springframework.boot:spring-boot-starter-security:<%= _.unescape('\$\{versions.spring_boot}')%>")
-    compile("org.springframework.boot:spring-boot-starter-data-jpa:<%= _.unescape('\$\{versions.spring_boot}')%>")
-    compile("org.springframework.boot:spring-boot-starter-thymeleaf:<%= _.unescape('\$\{versions.spring_boot}')%>")
+    compile("org.springframework.boot:spring-boot-starter-web:<%= _.unescape('\$\{springBootVersion}')%>")
+    compile("org.springframework.boot:spring-boot-starter-actuator:<%= _.unescape('\$\{springBootVersion}')%>")
+    compile("org.springframework.boot:spring-boot-starter-security:<%= _.unescape('\$\{springBootVersion}')%>")
+    compile("org.springframework.boot:spring-boot-starter-data-jpa:<%= _.unescape('\$\{springBootVersion}')%>")
+    compile("org.springframework.boot:spring-boot-starter-thymeleaf:<%= _.unescape('\$\{springBootVersion}')%>")
     compile("org.springsource.loaded:springloaded:1.2.0.BUILD-SNAPSHOT")
     compile("org.springframework:spring-context-support:4.0.2.RELEASE")
     compile("org.springframework.security.oauth:spring-security-oauth2:2.0.0.M4") {
@@ -97,6 +87,6 @@ dependencies {
     testCompile("com.jayway.awaitility:awaitility:1.4.0")
     testCompile("com.jayway.jsonpath:json-path:0.9.1")
     testCompile("com.h2database:h2:1.3.175")
-    testCompile("org.springframework.boot:spring-boot-starter-test:<%= _.unescape('\$\{versions.spring_boot}')%>")
+    testCompile("org.springframework.boot:spring-boot-starter-test:<%= _.unescape('\$\{springBootVersion}')%>")
     testCompile("org.assertj:assertj-core:1.5.0")
 }
