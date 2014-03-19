@@ -19,6 +19,8 @@ async:
     queueCapacity: 10000
 
 stormpath:
+  app:
+    name: <%=baseName%>
   api:
     key:
       file:

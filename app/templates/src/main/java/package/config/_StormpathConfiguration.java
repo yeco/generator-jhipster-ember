@@ -20,8 +20,8 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class StormpathConfiguration {
-    private static final String APP_NAME = "<%=baseName%>";
-
+    @Value("<%= _.unescape('\$\{stormpath.app.name}')%>")
+    private String stormpathAppName;
     @Value("<%= _.unescape('\$\{stormpath.api.key.id}')%>")
     private String stormpathApiKeyId;
     @Value("<%= _.unescape('\$\{stormpath.api.key.secret}')%>")
@@ -37,18 +37,18 @@ public class StormpathConfiguration {
         Client c = stormpathClient();
         Application app = null;
 
-        final ApplicationList applications = c.getCurrentTenant().getApplications(Applications.where(Applications.name().eqIgnoreCase(APP_NAME)));
+        final ApplicationList applications = c.getCurrentTenant().getApplications(Applications.where(Applications.name().eqIgnoreCase(stormpathAppName)));
 
         for (Application application : applications) {
             //Prevent case sensitive mistakes
-            if (application.getName().equals(APP_NAME)) {
+            if (application.getName().equals(stormpathAppName)) {
                 app = application;
             }
         }
 
         if (app == null) {
             app = c.instantiate(Application.class);
-            app.setName(APP_NAME);
+            app.setName(stormpathAppName);
             app = c.getCurrentTenant().createApplication(Applications.newCreateRequestFor(app).createDirectory().build());
         }
 
@@ -58,10 +58,10 @@ public class StormpathConfiguration {
     @Bean
     public Client stormpathClient() {
         final ClientBuilder clientBuilder = new ClientBuilder();
-        if (StringUtils.isNotEmpty(stormpathApiKeyFileLocation)) {
-            clientBuilder.setApiKeyFileLocation(stormpathApiKeyFileLocation);
-        } else {
+        if (StringUtils.isNotEmpty(stormpathApiKeyId) && StringUtils.isNotEmpty(stormpathApiKeySecret)) {
             clientBuilder.setApiKey(stormpathApiKeyId, stormpathApiKeySecret);
+        } else {
+            clientBuilder.setApiKeyFileLocation(stormpathApiKeyFileLocation);
         }
         return clientBuilder.setCacheManager(new SpringCacheManager(cacheManager)).build();
     }
