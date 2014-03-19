@@ -59,6 +59,7 @@ public class OAuth2ServerConfig  {
                     .antMatchers("/metrics").access("#oauth2.denyOAuthClient() and hasRole('USER,ADMIN') or #oauth2.hasScope('read')")
                     .antMatchers("/shutdown").access("#oauth2.denyOAuthClient() and hasRole('USER,ADMIN') or #oauth2.hasScope('read')")
                     .antMatchers("/metrics/**").access("#oauth2.denyOAuthClient() and hasRole('USER,ADMIN') or #oauth2.hasScope('read')")
+                    .antMatchers("/api/v1/loggers/**").access("#oauth2.denyOAuthClient() and hasRole('USER,ADMIN,ROOT') or #oauth2.hasScope('read,write')")
                     .antMatchers("/api/v1/**").access("#oauth2.denyOAuthClient() and hasRole('USER') or #oauth2.hasScope('read,write')")
                 .and()
                     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER);

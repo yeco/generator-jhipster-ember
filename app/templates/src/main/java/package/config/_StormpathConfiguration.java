@@ -1,5 +1,8 @@
 package <%=packageName%>.config;
 
+import com.stormpath.sdk.application.Application;
+import com.stormpath.sdk.application.ApplicationList;
+import com.stormpath.sdk.application.Applications;
 import com.stormpath.sdk.client.Client;
 import com.stormpath.sdk.client.ClientBuilder;
 import com.stormpath.spring.security.cache.SpringCacheManager;
@@ -17,17 +20,40 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class StormpathConfiguration {
-    @Value("<%= _.unescape('\$\{stormpath.api.key.id}')%>")
+    private static final String APP_NAME = "jhipster-ng";
+
+    @Value("${stormpath.api.key.id}")
     private String stormpathApiKeyId;
-    @Value("<%= _.unescape('\$\{stormpath.api.key.secret}')%>")
+    @Value("${stormpath.api.key.secret}")
     private String stormpathApiKeySecret;
-    @Value("<%= _.unescape('\$\{stormpath.api.key.file.location}')%>")
+    @Value("${stormpath.api.key.file.location}")
     private String stormpathApiKeyFileLocation;
-    @Value("<%= _.unescape('\$\{stormpath.application.url}')%>")
-    private String stormpathApplicationUrl;
 
     @Autowired
     private CacheManager cacheManager;
+
+    @Bean
+    public Application stormpathApplication() {
+        Client c = stormpathClient();
+        Application app = null;
+
+        final ApplicationList applications = c.getCurrentTenant().getApplications(Applications.where(Applications.name().eqIgnoreCase(APP_NAME)));
+
+        for (Application application : applications) {
+            //Prevent case sensitive mistakes
+            if (application.getName().equals(APP_NAME)) {
+                app = application;
+            }
+        }
+
+        if (app == null) {
+            app = c.instantiate(Application.class);
+            app.setName(APP_NAME);
+            app = c.getCurrentTenant().createApplication(Applications.newCreateRequestFor(app).createDirectory().build());
+        }
+
+        return app;
+    }
 
     @Bean
     public Client stormpathClient() {
@@ -51,7 +77,7 @@ public class StormpathConfiguration {
     public StormpathAuthenticationProvider authenticationProvider() {
         StormpathAuthenticationProvider sap = new StormpathAuthenticationProvider();
         sap.setClient(stormpathClient());
-        sap.setApplicationRestUrl(stormpathApplicationUrl);
+        sap.setApplicationRestUrl(stormpathApplication().getHref());
         sap.setGroupGrantedAuthorityResolver(authorityResolver());
         return sap;
     }

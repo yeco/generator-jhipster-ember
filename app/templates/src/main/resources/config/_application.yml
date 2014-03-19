@@ -19,8 +19,6 @@ async:
     queueCapacity: 10000
 
 stormpath:
-  application:
-    url:
   api:
     key:
       file:

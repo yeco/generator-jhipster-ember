@@ -48,7 +48,8 @@ Ember.Application.initializer({
                 Ember.run(function () {
                     resolve({
                         access_token: response.access_token,
-                        username: response.username
+                        username: response.username,
+                        roles: response.roles
                     });
                 });
             }, function (xhr, status, error) {

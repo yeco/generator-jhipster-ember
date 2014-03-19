@@ -274,6 +274,7 @@ JhipsterGenerator.prototype.app = function app() {
 
     this.template(webappDir + 'scripts/controllers/_login_controller.js', webappDir + 'scripts/controllers/login_controller.js');
     this.template(webappDir + 'scripts/controllers/_logs_config_controller.js', webappDir + 'scripts/controllers/logs_config_controller.js');
+    this.template(webappDir + 'scripts/controllers/_application_controller.js', webappDir + 'scripts/controllers/application_controller.js');
     this.template(webappDir + 'scripts/models/_user_model.js', webappDir + 'scripts/models/user_model.js');
     this.template(webappDir + 'scripts/models/_logger_model.js', webappDir + 'scripts/models/logger_model.js');
     this.template(webappDir + 'scripts/routes/_application_route.js', webappDir + 'scripts/routes/application_route.js');

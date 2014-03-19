@@ -6,9 +6,7 @@ import com.stormpath.sdk.account.AccountCriteria;
 import com.stormpath.sdk.account.AccountList;
 import com.stormpath.sdk.account.Accounts;
 import com.stormpath.sdk.application.Application;
-import com.stormpath.sdk.client.Client;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -22,9 +20,7 @@ import org.springframework.util.Assert;
 @Repository
 public class UserRepository implements PagingAndSortingRepository<User, String> {
     @Autowired
-    private Client stormpathClient;
-    @Value("<%= _.unescape('\$\{stormpath.application.url}')%>")
-    private String stormpathApplicationUrl;
+    private Application application;
 
     @Override
     public Iterable<User> findAll(Sort sort) {
@@ -51,7 +47,7 @@ public class UserRepository implements PagingAndSortingRepository<User, String> 
         Assert.notNull(id, "The given id must not be null!");
 
         AccountCriteria criteria = Accounts.where(Accounts.username().eqIgnoreCase(id));
-        AccountList accounts = application().getAccounts(criteria);
+        AccountList accounts = application.getAccounts(criteria);
         Account account = null;
         for (Account acc : accounts) {
             account = acc;
@@ -98,9 +94,5 @@ public class UserRepository implements PagingAndSortingRepository<User, String> 
     @Override
     public void deleteAll() {
 
-    }
-
-    private Application application() {
-        return stormpathClient.getDataStore().getResource(stormpathApplicationUrl, Application.class);
     }
 }
