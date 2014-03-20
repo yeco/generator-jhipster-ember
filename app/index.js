@@ -173,9 +173,9 @@ JhipsterGenerator.prototype.app = function app() {
     this.template('src/main/java/package/web/propertyeditors/_LocaleDateTimeEditor.java', javaDir + 'web/propertyeditors/LocaleDateTimeEditor.java');
 
     this.template('src/main/java/package/web/rest/_package-info.java', javaDir + 'web/rest/package-info.java');
-    this.template('src/main/java/package/web/rest/_AuditResource.java', javaDir + 'web/rest/AuditResource.java');
-    this.template('src/main/java/package/web/rest/_LogsResource.java', javaDir + 'web/rest/LogsResource.java');
-    this.template('src/main/java/package/web/rest/_UserResource.java', javaDir + 'web/rest/UserResource.java');
+    this.template('src/main/java/package/web/rest/_AuditEventsResource.java', javaDir + 'web/rest/AuditEventsResource.java');
+    this.template('src/main/java/package/web/rest/_LoggersResource.java', javaDir + 'web/rest/LoggersResource.java');
+    this.template('src/main/java/package/web/rest/_UsersResource.java', javaDir + 'web/rest/UsersResource.java');
     this.template('src/main/java/package/web/rest/_AbstractRestResource.java', javaDir + 'web/rest/AbstractRestResource.java');
     this.template('src/main/java/package/web/rest/_RestError.java', javaDir + 'web/rest/RestError.java');
 

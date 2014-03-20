@@ -6,11 +6,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Spring Data JPA repository for the PersistentAuditEvent entity.
  */
-public interface PersistenceAuditEventRepository extends JpaRepository<PersistentAuditEvent, String> {
+public interface PersistenceAuditEventRepository extends JpaRepository<PersistentAuditEvent, UUID> {
 
     List<PersistentAuditEvent> findByPrincipal(String principal);
 

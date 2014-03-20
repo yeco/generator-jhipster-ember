@@ -33,6 +33,9 @@ public class User implements Resource<String> {
         @Valid
         private User user;
 
+        public UserWrapper() {
+        }
+
         public UserWrapper(User user) {
             this.user = user;
         }

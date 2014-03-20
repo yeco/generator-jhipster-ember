@@ -1,5 +1,6 @@
 package <%=packageName%>.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.TypeDef;
@@ -28,6 +29,7 @@ public abstract class Base implements Persistable<UUID>, Serializable {
     @NotNull
     private UUID id;
 
+    @JsonIgnore
     @Override
     public boolean isNew() {
         return null == id;

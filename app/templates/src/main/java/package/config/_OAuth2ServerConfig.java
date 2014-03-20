@@ -1,7 +1,7 @@
 package <%=packageName%>.config;
 
-import <%=packageName%>.security.UserApprovalHandler;
 import <%=packageName%>.security.CustomTokenEnhancer;
+import <%=packageName%>.security.UserApprovalHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,6 +34,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  *
@@ -69,6 +70,7 @@ public class OAuth2ServerConfig  {
                     .antMatchers("/shutdown").access("#oauth2.denyOAuthClient() and hasRole('USER,ADMIN') or #oauth2.hasScope('read')")
                     .antMatchers("/metrics/**").access("#oauth2.denyOAuthClient() and hasRole('USER,ADMIN') or #oauth2.hasScope('read')")
                     .antMatchers("/api/v1/loggers/**").access("#oauth2.denyOAuthClient() and hasRole('USER,ADMIN,ROOT') or #oauth2.hasScope('read_write')")
+                    .antMatchers("/api/v1/auditEvents/**").access("#oauth2.denyOAuthClient() and hasRole('USER,ADMIN,ROOT') or #oauth2.hasScope('read_write')")
                     .antMatchers("/api/v1/**").access("#oauth2.denyOAuthClient() and hasRole('USER') or #oauth2.hasScope('read_write')")
                 .and()
                     .exceptionHandling().authenticationEntryPoint(oAuth2AuthenticationEntryPoint)
@@ -106,7 +108,7 @@ public class OAuth2ServerConfig  {
             clients.inMemory().withClient("web")
                     .resourceIds(RESOURCE_ID)
                     .authorizedGrantTypes("password", "authorization_code", "implicit")
-                    .scopes("read_write");
+                    .scopes("read_write", "read", "write");
         }
 
         public UserApprovalHandler userApprovalHandler() throws Exception {

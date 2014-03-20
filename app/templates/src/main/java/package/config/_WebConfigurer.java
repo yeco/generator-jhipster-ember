@@ -6,6 +6,7 @@ import com.codahale.metrics.servlet.InstrumentedFilter;
 import com.codahale.metrics.servlets.HealthCheckServlet;
 import com.codahale.metrics.servlets.MetricsServlet;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import <%=packageName%>.security.OAuth2ExceptionMixin;
 import <%=packageName%>.web.filter.CachingHttpHeadersFilter;
 import lombok.extern.slf4j.Slf4j;
@@ -63,6 +64,7 @@ public class WebConfigurer implements ServletContextInitializer {
     @Bean
     public ObjectMapper objectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
         objectMapper.findAndRegisterModules();
         objectMapper.addMixInAnnotations(OAuth2Exception.class, OAuth2ExceptionMixin.class);
 
