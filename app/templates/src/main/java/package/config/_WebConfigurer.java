@@ -3,21 +3,22 @@ package <%=packageName%>.config;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.health.HealthCheckRegistry;
 import com.codahale.metrics.servlet.InstrumentedFilter;
-import com.codahale.metrics.servlets.MetricsServlet;
-import <%=packageName%>.web.filter.CachingHttpHeadersFilter;
 import com.codahale.metrics.servlets.HealthCheckServlet;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.apache.catalina.connector.Connector;
+import com.codahale.metrics.servlets.MetricsServlet;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import <%=packageName%>.security.OAuth2ExceptionMixin;
+import <%=packageName%>.web.filter.CachingHttpHeadersFilter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.web.HttpMessageConverters;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
 import org.springframework.boot.context.embedded.ServletContextInitializer;
-import org.springframework.boot.context.embedded.tomcat.TomcatConnectorCustomizer;
 import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.tuckey.web.filters.urlrewrite.UrlRewriteFilter;
 import org.tuckey.web.filters.urlrewrite.gzip.GzipFilter;
 
@@ -31,10 +32,9 @@ import java.util.Map;
 /**
  * Configuration of web application with Servlet 3.0 APIs.
  */
+@Slf4j
 @Configuration
 public class WebConfigurer implements ServletContextInitializer {
-
-    private final Logger log = LoggerFactory.getLogger(WebConfigurer.class);
 
     @Inject
     private Environment env;
@@ -49,17 +49,34 @@ public class WebConfigurer implements ServletContextInitializer {
     private int port;
 
     @Bean
+    public HttpMessageConverters httpMessageConverters() {
+        return new HttpMessageConverters(mappingJackson2HttpMessageConverter());
+    }
+
+    @Bean
+    public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {
+        MappingJackson2HttpMessageConverter mappingJackson2JsonView = new MappingJackson2HttpMessageConverter();
+        mappingJackson2JsonView.setObjectMapper(objectMapper());
+        return mappingJackson2JsonView;
+    }
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.findAndRegisterModules();
+        objectMapper.addMixInAnnotations(OAuth2Exception.class, OAuth2ExceptionMixin.class);
+
+        return objectMapper;
+    }
+
+    @Bean
     public EmbeddedServletContainerFactory servletContainer() {
         TomcatEmbeddedServletContainerFactory factory = new TomcatEmbeddedServletContainerFactory(this.port);
-        factory.addConnectorCustomizers(new TomcatConnectorCustomizer() {
-            @Override
-            public void customize(Connector connector) {
-                connector.setProperty("bindOnInit", "true");
-            }
+        factory.addConnectorCustomizers(connector -> {
+            connector.setProperty("bindOnInit", "true");
         });
         return factory;
     }
-
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
         log.info("Web application configuration, using profiles: {}", Arrays.toString(env.getActiveProfiles()));
@@ -109,8 +126,7 @@ public class WebConfigurer implements ServletContextInitializer {
     /**
      * Initializes the cachig HTTP Headers Filter.
      */
-    private void initCachingHttpHeadersFilter(ServletContext servletContext,
-                                              EnumSet<DispatcherType> disps) {
+    private void initCachingHttpHeadersFilter(ServletContext servletContext, EnumSet<DispatcherType> disps) {
         log.debug("Registering Cachig HTTP Headers Filter");
         FilterRegistration.Dynamic cachingHttpHeadersFilter =
                 servletContext.addFilter("cachingHttpHeadersFilter",

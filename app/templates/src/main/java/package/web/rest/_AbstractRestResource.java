@@ -73,14 +73,12 @@ public abstract class AbstractRestResource<E extends Resource<ID>, ID extends Se
         }
     }
 
-    //Error handlers
-
     @ResponseBody
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public RestError handleException(MethodArgumentNotValidException e) {
         RestError error = RestError.INVALID_ERROR;
-        error.overrideDefaultMessage(error.getDefaultMessage() + ": " + e.getBindingResult().getObjectName());
+        error.setMessage(error.getMessage() + ": " + e.getBindingResult().getObjectName());
         return error;
     }
 
@@ -90,7 +88,7 @@ public abstract class AbstractRestResource<E extends Resource<ID>, ID extends Se
     public RestError handleException(EntityNotFoundException e) {
         RestError error = RestError.NOT_FOUND_ERROR;
         if (e.getMessage() != null) {
-            error.overrideDefaultMessage(e.getMessage() + " not found");
+            error.setMessage(e.getMessage() + " not found");
         }
         return error;
     }
@@ -100,7 +98,15 @@ public abstract class AbstractRestResource<E extends Resource<ID>, ID extends Se
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public RestError handleException(BindException e) {
         RestError error = RestError.INVALID_ERROR;
-        error.overrideDefaultMessage(error.getDefaultMessage() + ": " + e.getObjectName());
+        error.setMessage(error.getMessage() + ": " + e.getObjectName());
         return error;
     }
-}
+
+    @ResponseBody
+    @ExceptionHandler(UnsupportedOperationException.class)
+    @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
+    public RestError handleException(UnsupportedOperationException e) {
+        final RestError error = RestError.METHOD_NOT_ALLOWED_ERROR;
+        error.setMessage(e.getMessage());
+        return error;
+    }}

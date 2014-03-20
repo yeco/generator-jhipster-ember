@@ -143,7 +143,6 @@ JhipsterGenerator.prototype.app = function app() {
     this.template('src/main/java/package/domain/_User.java', javaDir + 'domain/User.java');
     this.template('src/main/java/package/domain/_Resource.java', javaDir + 'domain/Resource.java');
     this.template('src/main/java/package/domain/_Logger.java', javaDir + 'domain/Logger.java');
-    this.template('src/main/java/package/domain/util/_CustomLocalDateSerializer.java', javaDir + 'domain/util/CustomLocalDateSerializer.java');
     this.template('src/main/java/package/domain/util/_CustomPage.java', javaDir + 'domain/util/CustomPage.java');
     this.template('src/main/java/package/domain/util/_CustomPageSerializer.java', javaDir + 'domain/util/CustomPageSerializer.java');
     this.template('src/main/java/package/domain/util/_EntityWrapper.java', javaDir + 'domain/util/EntityWrapper.java');
@@ -159,6 +158,8 @@ JhipsterGenerator.prototype.app = function app() {
     this.template('src/main/java/package/security/_SecurityUtils.java', javaDir + 'security/SecurityUtils.java');
     this.template('src/main/java/package/security/_CustomTokenEnhancer.java', javaDir + 'security/CustomTokenEnhancer.java');
     this.template('src/main/java/package/security/_UserApprovalHandler.java', javaDir + 'security/UserApprovalHandler.java');
+    this.template('src/main/java/package/security/_OAuth2ExceptionMixin.java', javaDir + 'security/OAuth2ExceptionMixin.java');
+    this.template('src/main/java/package/security/_OAuth2ExceptionSerializer.java', javaDir + 'security/OAuth2ExceptionSerializer.java');
 
     this.template('src/main/java/package/service/_package-info.java', javaDir + 'service/package-info.java');
     this.template('src/main/java/package/service/_MailService.java', javaDir + 'service/MailService.java');

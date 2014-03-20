@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -34,9 +35,7 @@ public class LoggerRepository implements PagingAndSortingRepository<Logger, Stri
         final Integer offset = pageable.getOffset();
         final Integer end = pageable.getOffset() + pageable.getPageSize();
         final Integer total = context.getLoggerList().size();
-        for (ch.qos.logback.classic.Logger logger : context.getLoggerList().subList(offset, end > total ? total - 1 : end)) {
-            loggers.add(new Logger(logger));
-        }
+        loggers.addAll(context.getLoggerList().subList(offset, end > total ? total - 1 : end).stream().map(Logger::new).collect(Collectors.toList()));
         return new PageImpl<>(loggers, pageable, total);
     }
 
