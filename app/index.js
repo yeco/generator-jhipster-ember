@@ -138,7 +138,7 @@ JhipsterGenerator.prototype.app = function app() {
     this.template('src/main/java/package/config/reload/_JacksonReloader.java', javaDir + 'config/reload/JacksonReloader.java');
 
     this.template('src/main/java/package/domain/_package-info.java', javaDir + 'domain/package-info.java');
-    this.template('src/main/java/package/domain/_PersistentAuditEvent.java', javaDir + 'domain/PersistentAuditEvent.java');
+    this.template('src/main/java/package/domain/_AuditEvent.java', javaDir + 'domain/AuditEvent.java');
     this.template('src/main/java/package/domain/_Base.java', javaDir + 'domain/Base.java');
     this.template('src/main/java/package/domain/_User.java', javaDir + 'domain/User.java');
     this.template('src/main/java/package/domain/_Resource.java', javaDir + 'domain/Resource.java');
@@ -163,7 +163,6 @@ JhipsterGenerator.prototype.app = function app() {
 
     this.template('src/main/java/package/service/_package-info.java', javaDir + 'service/package-info.java');
     this.template('src/main/java/package/service/_MailService.java', javaDir + 'service/MailService.java');
-    this.template('src/main/java/package/service/_AuditEventService.java', javaDir + 'service/AuditEventService.java');
     this.template('src/main/java/package/service/_AuditEventConverter.java', javaDir + 'service/AuditEventConverter.java');
 
     this.template('src/main/java/package/web/filter/_package-info.java', javaDir + 'web/filter/package-info.java');
@@ -223,18 +222,22 @@ JhipsterGenerator.prototype.app = function app() {
     this.copy(webappDir + 'scripts/helpers.js', webappDir + 'scripts/helpers.js');
 
     this.template(webappDir + 'scripts/controllers/_login_controller.js', webappDir + 'scripts/controllers/login_controller.js');
+    this.template(webappDir + 'scripts/controllers/_audit_event_controller.js', webappDir + 'scripts/controllers/audit_event_controller.js');
     this.template(webappDir + 'scripts/controllers/_logs_config_controller.js', webappDir + 'scripts/controllers/logs_config_controller.js');
     this.template(webappDir + 'scripts/controllers/_application_controller.js', webappDir + 'scripts/controllers/application_controller.js');
     this.template(webappDir + 'scripts/models/_user_model.js', webappDir + 'scripts/models/user_model.js');
+    this.template(webappDir + 'scripts/models/_audit_event_model.js', webappDir + 'scripts/models/audit_event_model.js');
     this.template(webappDir + 'scripts/models/_logger_model.js', webappDir + 'scripts/models/logger_model.js');
     this.template(webappDir + 'scripts/routes/_application_route.js', webappDir + 'scripts/routes/application_route.js');
     this.template(webappDir + 'scripts/routes/_index_route.js', webappDir + 'scripts/routes/index_route.js');
     this.template(webappDir + 'scripts/routes/_logs_config_route.js', webappDir + 'scripts/routes/logs_config_route.js');
+    this.template(webappDir + 'scripts/routes/_audit_event_route.js', webappDir + 'scripts/routes/audit_event_route.js');
 
     this.copy(webappDir + 'templates/index.hbs', webappDir + 'templates/index.hbs');
     this.copy(webappDir + 'templates/login.hbs', webappDir + 'templates/login.hbs');
     this.copy(webappDir + 'templates/logs_config.hbs', webappDir + 'templates/logs_config.hbs');
     this.copy(webappDir + 'templates/application.hbs', webappDir + 'templates/application.hbs');
+    this.copy(webappDir + 'templates/audit_event.hbs', webappDir + 'templates/audit_event.hbs');
     this.template(webappDir + 'templates/partials/_navigation.hbs', webappDir + 'templates/partials/navigation.hbs');
 
     // Create Test Javascript files

@@ -27,3 +27,13 @@ metrics:
         enabled: false
         host:
         port:
+
+stormpath:
+  app:
+    name: <%=baseName%>-prod
+  api:
+    key:
+      file:
+        location: <%= _.unescape('\$\{HOME}/.config/stormpath/apiKey.properties')%>
+      id:
+      secret:

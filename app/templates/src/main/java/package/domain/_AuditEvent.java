@@ -23,7 +23,7 @@ import java.util.UUID;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "audit_events")
-public class PersistentAuditEvent extends Base implements Resource<UUID> {
+public class AuditEvent extends Base implements Resource<UUID> {
     @NotNull
     @Column(name = "principal")
     private String principal;
@@ -42,20 +42,20 @@ public class PersistentAuditEvent extends Base implements Resource<UUID> {
     private Map<String, String> data = new HashMap<>();
 
     @Data
-    public static class AuditEventWrapper implements EntityWrapper<PersistentAuditEvent> {
+    public static class AuditEventWrapper implements EntityWrapper<AuditEvent> {
         @Valid
-        private PersistentAuditEvent auditEvent;
+        private AuditEvent auditEvent;
 
         public AuditEventWrapper() {
         }
 
-        public AuditEventWrapper(PersistentAuditEvent auditEvent) {
+        public AuditEventWrapper(AuditEvent auditEvent) {
             this.auditEvent = auditEvent;
         }
 
         @JsonIgnore
         @Override
-        public PersistentAuditEvent getEntity() {
+        public AuditEvent getEntity() {
             return auditEvent;
         }
     }

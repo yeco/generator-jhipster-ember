@@ -1,6 +1,6 @@
 package <%=packageName%>.web.rest;
 
-import <%=packageName%>.domain.PersistentAuditEvent;
+import <%=packageName%>.domain.AuditEvent;
 import <%=packageName%>.repository.PersistenceAuditEventRepository;
 import <%=packageName%>.web.propertyeditors.LocaleDateTimeEditor;
 import org.joda.time.LocalDateTime;
@@ -20,23 +20,23 @@ import java.util.UUID;
  */
 @RestController
 @RequestMapping("/api/v1/auditEvents")
-public class AuditEventsResource extends AbstractRestResource<PersistentAuditEvent, UUID, PersistentAuditEvent.AuditEventWrapper> {
+public class AuditEventsResource extends AbstractRestResource<AuditEvent, UUID, AuditEvent.AuditEventWrapper> {
 
     @Autowired
     private PersistenceAuditEventRepository persistenceAuditEventRepository;
 
     @Override
-    protected Class<PersistentAuditEvent> entityClass() {
-        return PersistentAuditEvent.class;
+    protected Class<AuditEvent> entityClass() {
+        return AuditEvent.class;
     }
 
     @Override
-    protected PersistentAuditEvent.AuditEventWrapper entityWrapper(PersistentAuditEvent entity) {
-        return new PersistentAuditEvent.AuditEventWrapper(entity);
+    protected AuditEvent.AuditEventWrapper entityWrapper(AuditEvent entity) {
+        return new AuditEvent.AuditEventWrapper(entity);
     }
 
     @Override
-    protected PagingAndSortingRepository<PersistentAuditEvent, UUID> repository() {
+    protected PagingAndSortingRepository<AuditEvent, UUID> repository() {
         return persistenceAuditEventRepository;
     }
 
@@ -46,12 +46,12 @@ public class AuditEventsResource extends AbstractRestResource<PersistentAuditEve
     }
 
     @Override
-    public ResponseEntity<PersistentAuditEvent.AuditEventWrapper> create(PersistentAuditEvent.AuditEventWrapper v) throws Exception {
+    public ResponseEntity<AuditEvent.AuditEventWrapper> create(AuditEvent.AuditEventWrapper v) throws Exception {
         throw new UnsupportedOperationException("Request method 'POST' not supported");
     }
 
     @Override
-    public ResponseEntity<PersistentAuditEvent.AuditEventWrapper> update(@PathVariable("id") UUID uuid, PersistentAuditEvent.AuditEventWrapper v) throws Exception {
+    public ResponseEntity<AuditEvent.AuditEventWrapper> update(@PathVariable("id") UUID uuid, AuditEvent.AuditEventWrapper v) throws Exception {
         throw new UnsupportedOperationException("Request method 'PUT' not supported");
     }
 

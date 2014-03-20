@@ -23,3 +23,13 @@ database:
 
 metrics:
     jmx.enabled: true
+
+stormpath:
+  app:
+    name: <%=baseName%>-dev
+  api:
+    key:
+      file:
+        location: <%= _.unescape('\$\{HOME}/.config/stormpath/apiKey.properties')%>
+      id:
+      secret:

@@ -6,6 +6,9 @@
         path: '/'
     });
     this.route('logs_config', {
-        path: '/logs'
+        path: '/loggers'
     });
+    this.route('audit_event'), {
+        path: '/auditEvents'
+    }
 });
