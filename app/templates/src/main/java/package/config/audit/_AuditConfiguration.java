@@ -1,10 +1,9 @@
 package <%=packageName%>.config.audit;
 
-import <%=packageName%>.domain.PersistentAuditEvent;
+import <%=packageName%>.domain.AuditEvent;
 import <%=packageName%>.repository.PersistenceAuditEventRepository;
 import <%=packageName%>.service.AuditEventConverter;
 import org.joda.time.LocalDateTime;
-import org.springframework.boot.actuate.audit.AuditEvent;
 import org.springframework.boot.actuate.audit.AuditEventRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,31 +22,30 @@ public class AuditConfiguration {
             private AuditEventConverter auditEventConverter;
 
             @Override
-            public List<AuditEvent> find(String principal, Date after) {
-                final List<PersistentAuditEvent> persistentAuditEvents;
+            public List<org.springframework.boot.actuate.audit.AuditEvent> find(String principal, Date after) {
+                final List<AuditEvent> auditEvents;
                 if (principal == null && after == null) {
-                    persistentAuditEvents = persistenceAuditEventRepository.findAll();
+                    auditEvents = persistenceAuditEventRepository.findAll();
                 } else if (after == null) {
-                    persistentAuditEvents = persistenceAuditEventRepository.findByPrincipal(principal);
+                    auditEvents = persistenceAuditEventRepository.findByPrincipal(principal);
                 } else {
-                    persistentAuditEvents =
+                    auditEvents =
                             persistenceAuditEventRepository.findByPrincipalAndAuditEventDateGreaterThan(principal, new LocalDateTime(after));
                 }
 
-                return auditEventConverter.convertToAuditEvent(persistentAuditEvents);
+                return auditEventConverter.convertToAuditEvent(auditEvents);
             }
 
             @Override
-            public void add(AuditEvent event) {
-                PersistentAuditEvent persistentAuditEvent = new PersistentAuditEvent();
-                persistentAuditEvent.setPrincipal(event.getPrincipal());
-                persistentAuditEvent.setAuditEventType(event.getType());
-                persistentAuditEvent.setAuditEventDate(new LocalDateTime(event.getTimestamp()));
-                persistentAuditEvent.setData(auditEventConverter.convertDataToStrings(event.getData()));
+            public void add(org.springframework.boot.actuate.audit.AuditEvent event) {
+                AuditEvent auditEvent = new AuditEvent();
+                auditEvent.setPrincipal(event.getPrincipal());
+                auditEvent.setAuditEventType(event.getType());
+                auditEvent.setAuditEventDate(new LocalDateTime(event.getTimestamp()));
+                auditEvent.setData(auditEventConverter.convertDataToStrings(event.getData()));
 
-                persistenceAuditEventRepository.save(persistentAuditEvent);
+                persistenceAuditEventRepository.save(auditEvent);
             }
         };
     }
 }
-

@@ -1,9 +1,8 @@
 package <%=packageName%>.service;
 
-import <%=packageName%>.domain.PersistentAuditEvent;
-import org.springframework.boot.actuate.audit.AuditEvent;
-import org.springframework.stereotype.Component;
+import <%=packageName%>.domain.AuditEvent;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
 
@@ -11,19 +10,20 @@ import java.util.*;
 public class AuditEventConverter {
 
     /**
-     * Convert a list of PersistentAuditEvent to a list of AuditEvent
+     * Convert a list of AuditEvent to a list of AuditEvent
+     *
      * @param persistentAuditEvents the list to convert
      * @return the converted list.
      */
-    public List<AuditEvent> convertToAuditEvent(List<PersistentAuditEvent> persistentAuditEvents) {
+    public List<org.springframework.boot.actuate.audit.AuditEvent> convertToAuditEvent(List<AuditEvent> persistentAuditEvents) {
         if (persistentAuditEvents == null) {
             return Collections.emptyList();
         }
 
-        List<AuditEvent> auditEvents = new ArrayList<>();
+        List<org.springframework.boot.actuate.audit.AuditEvent> auditEvents = new ArrayList<>();
 
-        for (PersistentAuditEvent persistentAuditEvent : persistentAuditEvents) {
-            AuditEvent auditEvent = new AuditEvent(persistentAuditEvent.getAuditEventDate().toDate(), persistentAuditEvent.getPrincipal(),
+        for (AuditEvent persistentAuditEvent : persistentAuditEvents) {
+            org.springframework.boot.actuate.audit.AuditEvent auditEvent = new org.springframework.boot.actuate.audit.AuditEvent(persistentAuditEvent.getAuditEventDate().toDate(), persistentAuditEvent.getPrincipal(),
                     persistentAuditEvent.getAuditEventType(), convertDataToObjects(persistentAuditEvent.getData()));
             auditEvents.add(auditEvent);
         }

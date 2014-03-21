@@ -1,0 +1,39 @@
+<div>
+    <h2>Audit Events</h2>
+</div>
+
+<table class="table table-condensed table-striped table-bordered table-responsive">
+    <thead>
+    <tr title="click to order">
+        <th>Event Id</th>
+        <th>Principal</th>
+        <th>Event Date</th>
+        <th>Event Type</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each}}
+        <tr>
+            <td>
+                <small>{{id}}</small>
+            </td>
+            <td>
+                {{principal}}
+            </td>
+            <td>
+                {{auditEventDate}}
+            </td>
+            <td>
+                {{auditEventType}}
+            </td>
+        </tr>
+    {{/each}}
+    </tbody>
+</table>
+<div class="text-center">
+    <ul class="pager">
+        <li {{bind-attr class="isFirstPage:disabled"}}><a href="#" {{action 'previousPage'}}>&larr; Previous</a></li>
+        <li>{{currentPage}} of {{totalPages}}</li>
+        <li {{bind-attr class="isLastPage:disabled"}}><a href="#" {{action 'nextPage'}}>Next &rarr;</a></li>
+    </ul>
+</div>

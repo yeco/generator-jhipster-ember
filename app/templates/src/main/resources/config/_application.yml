@@ -18,11 +18,6 @@ async:
     maxPoolSize: 50
     queueCapacity: 10000
 
-stormpath:
-  applicationUrl:
-  apiKeyId:
-  apiKeySecret:
-
 spring:
     mail:
         host: localhost
@@ -35,3 +30,29 @@ spring:
 
     messageSource:
         cacheSeconds: 1
+
+jwt:
+   token:
+      signing-key: |
+          -----BEGIN RSA PRIVATE KEY-----
+          MIICXQIBAAKBgQDWkKWA/8TMQKYjqmI9HuWYyD3BXS16hqBa7StpdlbW5P0DlxoM
+          tpYPhYCaWfVRIcXBKsbP9dePvO0YiONAWDM6mNeNoasrp6X6d4cRAxWVYPIdBvJk
+          pkimiJmCPHbYnopw81oYvgHbki2O5VbnS8qYuiGIdFcaYQcHCCyBhWKGwQIDAQAB
+          AoGBAL7icFsTMEGGQkf4jO1TT29ctZQRESSwIHjEBpsMbLVBgtZu1v34cgfc/UxU
+          O6qyIPx40eaxD9UQft4U6heUX/1f2ErApQEPhbfkYjJFLMIYIC6jKjOeSVLDhZ8H
+          sjEPdTBUnHA7W1cURlotEKV3zCuuoS6BxbnZcYkJz7W/Lh8BAkEA95tcG46AhBXD
+          lCPkVI5g3pvBLq6RdrmnTxHkMXGjD5CVo5KNVzS2focbIAV7Akd9LVGKCeixqRjx
+          QfOcr/rkdwJBAN3Wj9Vtl4TDU13LDHlH8ita00Jgqz6/HYRzy4IXyaS6EYDmbzIz
+          oerGSIztlUcLzbuvRMu2Xec67iwewwwLVIcCQQC1bOysdFnObnQD09i17C0mb1G5
+          dse3ComA8kcVw4ILIZHDbNqLj2A4jZ5edCWRofgigKB4ajvi/xenj2y7tUY5AkBI
+          fP8dB6WWPVk1cc8OpmLMpe4YZ4wtgbe8ezYJuYoraJ2lmCbHqbWECOzWGCBKSeId
+          LSV2x42hrFD9W8PyYJVrAkAxfN2YsIutQlj0qwJXyLYZMDuzeXwqe1BM/oz/aBTw
+          dxysRA1UCBBwueFmDPaLcJ4F59GuwTMrlwZ8CSXg8vkX
+          -----END RSA PRIVATE KEY-----
+      verification-key: |
+          -----BEGIN PUBLIC KEY-----
+          MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDWkKWA/8TMQKYjqmI9HuWYyD3B
+          XS16hqBa7StpdlbW5P0DlxoMtpYPhYCaWfVRIcXBKsbP9dePvO0YiONAWDM6mNeN
+          oasrp6X6d4cRAxWVYPIdBvJkpkimiJmCPHbYnopw81oYvgHbki2O5VbnS8qYuiGI
+          dFcaYQcHCCyBhWKGwQIDAQAB
+          -----END PUBLIC KEY-----

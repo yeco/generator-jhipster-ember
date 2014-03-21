@@ -1,6 +1,6 @@
 {
   "name": "generator-jhipster-ember",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Java + Spring + JPA + EmberJS complete dev stack",
   "keywords": [
     "yeoman-generator",
@@ -10,7 +10,8 @@
     "JPA",
     "Hibernate",
     "EmberJS",
-    "Twitter Bootstrap"
+    "Twitter Bootstrap",
+    "Gradle"
   ],
   "homepage": "",
   "bugs": "https://github.com/jarias/generator-jhipster-ember/issues",

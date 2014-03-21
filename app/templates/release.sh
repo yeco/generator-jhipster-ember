@@ -7,7 +7,6 @@ echo '----> Cleanup...'
 grunt clean
 grunt build
 git add -A .
-git add -u .
 
 echo '----> Bumping version...'
 grunt bump:minor

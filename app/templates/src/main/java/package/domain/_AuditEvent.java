@@ -1,16 +1,18 @@
 package <%=packageName%>.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import <%=packageName%>.domain.util.EntityWrapper;
 import lombok.Data;
-import lombok.EqualsAndHashCode;<% if (hibernateCache != 'no') { %>
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;<% } %>
+import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.Type;
 import org.joda.time.LocalDateTime;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Persist AuditEvent managed by the Spring Boot actuator
@@ -20,9 +22,8 @@ import java.util.Map;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "audit_events")<% if (hibernateCache != 'no') { %>
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)<% } %>
-public class PersistentAuditEvent extends Base {
+@Table(name = "audit_events")
+public class AuditEvent extends Base implements Resource<UUID> {
     @NotNull
     @Column(name = "principal")
     private String principal;
@@ -39,4 +40,23 @@ public class PersistentAuditEvent extends Base {
     @Column(name = "value")
     @CollectionTable(name = "audit_event_data", joinColumns = @JoinColumn(name = "audit_event_id"))
     private Map<String, String> data = new HashMap<>();
+
+    @Data
+    public static class AuditEventWrapper implements EntityWrapper<AuditEvent> {
+        @Valid
+        private AuditEvent auditEvent;
+
+        public AuditEventWrapper() {
+        }
+
+        public AuditEventWrapper(AuditEvent auditEvent) {
+            this.auditEvent = auditEvent;
+        }
+
+        @JsonIgnore
+        @Override
+        public AuditEvent getEntity() {
+            return auditEvent;
+        }
+    }
 }

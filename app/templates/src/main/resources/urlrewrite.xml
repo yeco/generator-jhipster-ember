@@ -26,8 +26,8 @@
         <to>/dist/scripts/$1</to>
     </rule>
     <rule>
-        <from>^/style/(.*)$</from>
-        <to>/dist/style/$1</to>
+        <from>^/styles/(.*)$</from>
+        <to>/dist/styles/$1</to>
     </rule>
     <!-- Force HTTPS prod only -->
     <!--

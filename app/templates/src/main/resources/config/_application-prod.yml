@@ -11,12 +11,7 @@ spring:
             ddl-auto: none
             naming-strategy: org.hibernate.cfg.EJB3NamingStrategy
         properties:
-            hibernate.cache.use_second_level_cache: <% if (hibernateCache == 'ehcache' || hibernateCache == 'hazelcast') { %>true<% } else { %>false<% } %>
-            hibernate.cache.use_query_cache: false
             hibernate.generate_statistics: false
-            <% if (hibernateCache == 'ehcache') { %>hibernate.cache.region.factory_class: org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory<% } else if (hibernateCache == 'hazelcast') { %>hibernate.cache.region.factory_class: <%=packageName%>.config.hazelcast.HazelcastCacheRegionFactory<% } %>
-            <% if (hibernateCache == 'hazelcast') { %>hibernate.cache.use_minimal_puts: true
-            hibernate.cache.hazelcast.use_lite_member: true<% } %>
 
     thymeleaf:
         mode: XHTML
@@ -33,11 +28,12 @@ metrics:
         host:
         port:
 
-<% if (clusteredHttpSession == 'hazelcast' || hibernateCache == 'hazelcast' || hibernateCache == 'ehcache') {%>cache:
-    timeToLiveSeconds: 3600<% } if (clusteredHttpSession == 'hazelcast' || hibernateCache == 'hazelcast') {%>
-    hazelcast:
-        debug: false
-        stickySession: false
-        backupCount: 1<% } if (hibernateCache == 'ehcache') { %>
-    ehcache:
-        maxBytesLocalHeap: 256M<% } %>
+stormpath:
+  app:
+    name: <%=baseName%>-prod
+  api:
+    key:
+      file:
+        location: <%= _.unescape('\$\{HOME}/.config/stormpath/apiKey.properties')%>
+      id:
+      secret:
