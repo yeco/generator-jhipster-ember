@@ -168,9 +168,6 @@ JhipsterGenerator.prototype.app = function app() {
     this.template('src/main/java/package/web/filter/_package-info.java', javaDir + 'web/filter/package-info.java');
     this.template('src/main/java/package/web/filter/_CachingHttpHeadersFilter.java', javaDir + 'web/filter/CachingHttpHeadersFilter.java');
 
-    this.template('src/main/java/package/web/propertyeditors/_package-info.java', javaDir + 'web/propertyeditors/package-info.java');
-    this.template('src/main/java/package/web/propertyeditors/_LocaleDateTimeEditor.java', javaDir + 'web/propertyeditors/LocaleDateTimeEditor.java');
-
     this.template('src/main/java/package/web/rest/_package-info.java', javaDir + 'web/rest/package-info.java');
     this.template('src/main/java/package/web/rest/_AuditEventsResource.java', javaDir + 'web/rest/AuditEventsResource.java');
     this.template('src/main/java/package/web/rest/_LoggersResource.java', javaDir + 'web/rest/LoggersResource.java');

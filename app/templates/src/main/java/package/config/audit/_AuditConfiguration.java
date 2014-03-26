@@ -3,12 +3,14 @@ package <%=packageName%>.config.audit;
 import <%=packageName%>.domain.AuditEvent;
 import <%=packageName%>.repository.PersistenceAuditEventRepository;
 import <%=packageName%>.service.AuditEventConverter;
-import org.joda.time.LocalDateTime;
 import org.springframework.boot.actuate.audit.AuditEventRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.inject.Inject;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
@@ -29,8 +31,8 @@ public class AuditConfiguration {
                 } else if (after == null) {
                     auditEvents = persistenceAuditEventRepository.findByPrincipal(principal);
                 } else {
-                    auditEvents =
-                            persistenceAuditEventRepository.findByPrincipalAndAuditEventDateGreaterThan(principal, new LocalDateTime(after));
+                    Instant instant = Instant.ofEpochMilli(after.getTime());
+                    auditEvents = persistenceAuditEventRepository.findByPrincipalAndAuditEventDateGreaterThan(principal, LocalDateTime.ofInstant(instant, ZoneId.systemDefault()));
                 }
 
                 return auditEventConverter.convertToAuditEvent(auditEvents);
@@ -41,7 +43,8 @@ public class AuditConfiguration {
                 AuditEvent auditEvent = new AuditEvent();
                 auditEvent.setPrincipal(event.getPrincipal());
                 auditEvent.setAuditEventType(event.getType());
-                auditEvent.setAuditEventDate(new LocalDateTime(event.getTimestamp()));
+                Instant instant = Instant.ofEpochMilli(event.getTimestamp().getTime());
+                auditEvent.setAuditEventDate(LocalDateTime.ofInstant(instant, ZoneId.systemDefault()));
                 auditEvent.setData(auditEventConverter.convertDataToStrings(event.getData()));
 
                 persistenceAuditEventRepository.save(auditEvent);

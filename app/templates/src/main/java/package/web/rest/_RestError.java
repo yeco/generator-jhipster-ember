@@ -1,15 +1,16 @@
 package <%=packageName%>.web.rest;
 
 import lombok.Data;
-import org.joda.time.DateTime;
 import org.springframework.http.HttpStatus;
+
+import java.time.LocalDateTime;
 
 /**
  *
  */
 @Data
 public class RestError {
-    private final DateTime timeStamp = new DateTime();
+    private final LocalDateTime timeStamp = LocalDateTime.now();
     private final String error;
     private Integer status;
     private String message;

@@ -12,15 +12,21 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.UUID;
 
 /**
  *
  */
-@Data
 @TypeDefs({
         @TypeDef(name = "pg-uuid", typeClass = org.hibernate.type.PostgresUUIDType.class, defaultForType = java.util.UUID.class),
+        @TypeDef(name = "localDateType", typeClass = org.jadira.usertype.dateandtime.threeten.PersistentLocalDate.class, defaultForType = LocalDate.class),
+        @TypeDef(name = "localDateTimeType", typeClass = org.jadira.usertype.dateandtime.threeten.PersistentLocalDateTime.class, defaultForType = LocalDateTime.class),
+        @TypeDef(name = "localTimeType", typeClass = org.jadira.usertype.dateandtime.threeten.PersistentLocalTime.class, defaultForType = LocalTime.class)
 })
+@Data
 @MappedSuperclass
 public abstract class Base implements Persistable<UUID>, Serializable {
     @Id

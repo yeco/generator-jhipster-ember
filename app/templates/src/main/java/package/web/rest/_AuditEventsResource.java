@@ -2,13 +2,9 @@ package <%=packageName%>.web.rest;
 
 import <%=packageName%>.domain.AuditEvent;
 import <%=packageName%>.repository.PersistenceAuditEventRepository;
-import <%=packageName%>.web.propertyeditors.LocaleDateTimeEditor;
-import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,11 +34,6 @@ public class AuditEventsResource extends AbstractRestResource<AuditEvent, UUID, 
     @Override
     protected PagingAndSortingRepository<AuditEvent, UUID> repository() {
         return persistenceAuditEventRepository;
-    }
-
-    @InitBinder
-    public void initBinder(WebDataBinder binder) {
-        binder.registerCustomEditor(LocalDateTime.class, new LocaleDateTimeEditor("yyyy-MM-dd", false));
     }
 
     @Override
