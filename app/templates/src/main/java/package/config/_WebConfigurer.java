@@ -6,10 +6,13 @@ import com.codahale.metrics.servlet.InstrumentedFilter;
 import com.codahale.metrics.servlets.HealthCheckServlet;
 import com.codahale.metrics.servlets.MetricsServlet;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.SerializationFeature;<% if (storage == 'mongo') { %>
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import <%=packageName%>.domain.util.ObjectIdSerializer;<% } %>
 import <%=packageName%>.security.OAuth2ExceptionMixin;
 import <%=packageName%>.web.filter.CachingHttpHeadersFilter;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.slf4j.Slf4j;<% if (storage == 'mongo') { %>
+import org.bson.types.ObjectId;<% } %>
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.web.HttpMessageConverters;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
@@ -65,7 +68,12 @@ public class WebConfigurer implements ServletContextInitializer {
     public ObjectMapper objectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-        objectMapper.findAndRegisterModules();
+        objectMapper.findAndRegisterModules();<% if (storage == 'mongo') { %>
+
+        SimpleModule module = new SimpleModule("ObjectIdModule");
+        module.addSerializer(ObjectId.class, new ObjectIdSerializer());
+        objectMapper.registerModule(module);
+<% } %>
         objectMapper.addMixInAnnotations(OAuth2Exception.class, OAuth2ExceptionMixin.class);
 
         return objectMapper;
