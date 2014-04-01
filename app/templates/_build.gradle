@@ -2,34 +2,34 @@ buildscript {
     repositories {
         mavenCentral()
         maven {
-            url 'http://repo.springsource.org/milestone/'
+            url "http://repo.springsource.org/milestone/"
         }
     }
     dependencies {
-        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.0.0.RC5'
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.0.0.RELEASE")
     }
 }
 
-apply plugin: 'idea'
-apply plugin: 'java'
-apply plugin: 'spring-boot'
+apply plugin: "idea"
+apply plugin: "java"
+apply plugin: "spring-boot"
 
 jar {
-    baseName = '<%= _.slugify(baseName) %>'
+    baseName = "<%= _.slugify(baseName) %>"
 }
 
 springBoot {
     backupSource = false
 }
 
-task stage(dependsOn: 'assemble')
+task stage(dependsOn: "assemble")
 
 repositories {
     maven {
-        url 'http://repo.spring.io/milestone'
+        url "http://repo.spring.io/milestone"
     }
     maven {
-        url 'http://repo.spring.io/snapshot'
+        url "http://repo.spring.io/snapshot"
     }
     mavenCentral()
 }
