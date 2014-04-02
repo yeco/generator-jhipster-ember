@@ -15,8 +15,7 @@ spring:
 <% } %><% if (storage == 'mongo') { %>
     data:
         mongodb:
-          host: localhost
-          database: <%= _.underscored(baseName) %>
+          uri: mongodb://localhost/<%= _.underscored(baseName) %>
 <% } %>
     thymeleaf:
         mode: XHTML
