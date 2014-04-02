@@ -3,7 +3,8 @@ var util = require('util'),
     path = require('path'),
     yeoman = require('yeoman-generator'),
     chalk = require('chalk'),
-    _s = require('underscore.string');
+    _s = require('underscore.string'),
+    shelljs = require('shelljs');
 
 var JhipsterGenerator = module.exports = function JhipsterGenerator(args, options, config) {
     yeoman.generators.Base.apply(this, arguments);
@@ -44,22 +45,37 @@ JhipsterGenerator.prototype.askFor = function askFor() {
         {
             type: 'input',
             name: 'baseName',
-            message: '(1/6) What is the base name of your application?',
+            message: '(1/3) What is the base name of your application?',
             default: 'jhipster-ember'
         },
         {
             type: 'input',
             name: 'packageName',
-            message: '(2/6) What is your default Java package name?',
+            message: '(2/3) What is your default Java package name?',
             default: 'com.mycompany.myapp'
+        },
+        {
+            type: 'list',
+            name: 'storage',
+            message: '(3/3) What is your application storage engine?',
+            choices: [
+                {
+                    value: 'postgres',
+                    name: 'PostgreSQL'
+                },
+                {
+                    value: 'mongo',
+                    name: 'MongoDB'
+                }
+            ],
+            default: 0
         }
     ];
 
     this.prompt(prompts, function (props) {
-        this.springVersion = props.springVersion;
-        this.springSecurityVersion = props.springSecurityVersion;
         this.packageName = props.packageName;
         this.baseName = props.baseName;
+        this.storage = props.storage;
         cb();
     }.bind(this));
 };
@@ -72,7 +88,7 @@ JhipsterGenerator.prototype.app = function app() {
     this.template('bowerrc', '.bowerrc');
     this.copy('Gruntfile.js', 'Gruntfile.js');
     this.copy('gitignore', '.gitignore');
-    this.copy('spring_loaded/springloaded-1.2.0-dev.jar', 'spring_loaded/springloaded-1.2.0-dev.jar');
+    removefolder('spring_loaded');
     this.copy('system.properties', 'system.properties');
     this.copy('Procfile', 'Procfile');
     this.copy('VERSION', 'VERSION');
@@ -103,7 +119,11 @@ JhipsterGenerator.prototype.app = function app() {
     this.template(resourceDir + '/config/_application-dev.yml', resourceDir + 'config/application-dev.yml');
     this.template(resourceDir + '/config/_application-prod.yml', resourceDir + 'config/application-prod.yml');
 
-    this.copy(resourceDir + '/config/liquibase/db-changelog.xml', resourceDir + 'config/liquibase/db-changelog.xml');
+    if(this.storage == 'postgres') {
+      this.copy(resourceDir + '/config/liquibase/db-changelog.xml', resourceDir + 'config/liquibase/db-changelog.xml');
+    } else {
+      removefolder(resourceDir + 'config/liquibase')
+    }
 
     // Create Java files
     var javaDir = 'src/main/java/' + packageFolder + '/';
@@ -114,7 +134,13 @@ JhipsterGenerator.prototype.app = function app() {
     this.template('src/main/java/package/config/_AsyncConfiguration.java', javaDir + 'config/AsyncConfiguration.java');
     this.template('src/main/java/package/config/_CacheConfiguration.java', javaDir + 'config/CacheConfiguration.java');
     this.template('src/main/java/package/config/_Constants.java', javaDir + 'config/Constants.java');
-    this.template('src/main/java/package/config/_DatabaseConfiguration.java', javaDir + 'config/DatabaseConfiguration.java');
+    if (this.storage == 'postgres') {
+      this.template('src/main/java/package/config/_DatabaseConfiguration.java', javaDir + 'config/DatabaseConfiguration.java');
+      removefile(javaDir + 'config/MongoConfiguration.java')
+    } else {
+      this.template('src/main/java/package/config/_MongoConfiguration.java', javaDir + 'config/MongoConfiguration.java');
+      removefile(javaDir + 'config/DatabaseConfiguration.java')
+    }
     this.template('src/main/java/package/config/_LocaleConfiguration.java', javaDir + 'config/LocaleConfiguration.java');
     this.template('src/main/java/package/config/_MailConfiguration.java', javaDir + 'config/MailConfiguration.java');
     this.template('src/main/java/package/config/_MetricsConfiguration.java', javaDir + 'config/MetricsConfiguration.java');
@@ -128,18 +154,30 @@ JhipsterGenerator.prototype.app = function app() {
     this.template('src/main/java/package/config/audit/_AuditConfiguration.java', javaDir + 'config/audit/AuditConfiguration.java');
 
     this.template('src/main/java/package/config/metrics/_package-info.java', javaDir + 'config/metrics/package-info.java');
-    this.template('src/main/java/package/config/metrics/_DatabaseHealthCheck.java', javaDir + 'config/metrics/DatabaseHealthCheck.java');
+    if(this.storage == 'postgres') {
+      this.template('src/main/java/package/config/metrics/_DatabaseHealthCheck.java', javaDir + 'config/metrics/DatabaseHealthCheck.java');
+    } else {
+      this.template('src/main/java/package/config/metrics/_DatabaseHealthCheck-mongo.java', javaDir + 'config/metrics/DatabaseHealthCheck.java');
+    }
     this.template('src/main/java/package/config/metrics/_JavaMailHealthCheck.java', javaDir + 'config/metrics/JavaMailHealthCheck.java');
 
-    this.template('src/main/java/package/config/reload/_package-info.java', javaDir + 'config/reload/package-info.java');
-    this.template('src/main/java/package/config/reload/_JHipsterFileSystemWatcher.java', javaDir + 'config/reload/JHipsterFileSystemWatcher.java');
-    this.template('src/main/java/package/config/reload/_JHipsterPluginManagerReloadPlugin.java', javaDir + 'config/reload/JHipsterPluginManagerReloadPlugin.java');
-    this.template('src/main/java/package/config/reload/_SpringReloader.java', javaDir + 'config/reload/SpringReloader.java');
-    this.template('src/main/java/package/config/reload/_JacksonReloader.java', javaDir + 'config/reload/JacksonReloader.java');
+    removefolder(javaDir + 'config/reload')
 
     this.template('src/main/java/package/domain/_package-info.java', javaDir + 'domain/package-info.java');
-    this.template('src/main/java/package/domain/_AuditEvent.java', javaDir + 'domain/AuditEvent.java');
-    this.template('src/main/java/package/domain/_Base.java', javaDir + 'domain/Base.java');
+    if(this.storage == 'postgres') {
+      this.template('src/main/java/package/domain/_Base.java', javaDir + 'domain/Base.java');
+      this.template('src/main/java/package/domain/_AuditEvent.java', javaDir + 'domain/AuditEvent.java');
+      removefile(javaDir + 'domain/util/LocalDateTimeReadConverter.java')
+      removefile(javaDir + 'domain/util/LocalDateTimeWriteConverter.java')
+      removefile(javaDir + 'domain/util/ObjectIdSerializer.java')
+    } else {
+      this.template('src/main/java/package/domain/_Base-mongo.java', javaDir + 'domain/Base.java');
+      this.template('src/main/java/package/domain/_AuditEvent-mongo.java', javaDir + 'domain/AuditEvent.java');
+      this.template('src/main/java/package/domain/util/_LocalDateTimeReadConverter.java', javaDir + 'domain/util/LocalDateTimeReadConverter.java');
+      this.template('src/main/java/package/domain/util/_LocalDateTimeWriteConverter.java', javaDir + 'domain/util/LocalDateTimeWriteConverter.java');
+      this.template('src/main/java/package/domain/util/_ObjectIdSerializer.java', javaDir + 'domain/util/ObjectIdSerializer.java');
+    }
+
     this.template('src/main/java/package/domain/_User.java', javaDir + 'domain/User.java');
     this.template('src/main/java/package/domain/_Resource.java', javaDir + 'domain/Resource.java');
     this.template('src/main/java/package/domain/_Logger.java', javaDir + 'domain/Logger.java');
@@ -147,10 +185,18 @@ JhipsterGenerator.prototype.app = function app() {
     this.template('src/main/java/package/domain/util/_CustomPageSerializer.java', javaDir + 'domain/util/CustomPageSerializer.java');
     this.template('src/main/java/package/domain/util/_EntityWrapper.java', javaDir + 'domain/util/EntityWrapper.java');
 
-    this.template('src/main/java/package/hibernate/_CustomPostgreSQLDialect.java', javaDir + 'hibernate/CustomPostgreSQLDialect.java');
+    if(this.storage == 'postgres') {
+      this.template('src/main/java/package/hibernate/_CustomPostgreSQLDialect.java', javaDir + 'hibernate/CustomPostgreSQLDialect.java');
+    } else {
+      removefolder(javaDir + 'hibernate')
+    }
 
     this.template('src/main/java/package/repository/_package-info.java', javaDir + 'repository/package-info.java');
-    this.template('src/main/java/package/repository/_PersistenceAuditEventRepository.java', javaDir + 'repository/PersistenceAuditEventRepository.java');
+    if(this.storage == 'postgres') {
+      this.template('src/main/java/package/repository/_PersistenceAuditEventRepository.java', javaDir + 'repository/PersistenceAuditEventRepository.java');
+    } else {
+      this.template('src/main/java/package/repository/_PersistenceAuditEventRepository-mongo.java', javaDir + 'repository/PersistenceAuditEventRepository.java');
+    }
     this.template('src/main/java/package/repository/_UserRepository.java', javaDir + 'repository/UserRepository.java');
     this.template('src/main/java/package/repository/_LoggerRepository.java', javaDir + 'repository/LoggerRepository.java');
 
@@ -169,10 +215,15 @@ JhipsterGenerator.prototype.app = function app() {
     this.template('src/main/java/package/web/filter/_CachingHttpHeadersFilter.java', javaDir + 'web/filter/CachingHttpHeadersFilter.java');
 
     this.template('src/main/java/package/web/rest/_package-info.java', javaDir + 'web/rest/package-info.java');
-    this.template('src/main/java/package/web/rest/_AuditEventsResource.java', javaDir + 'web/rest/AuditEventsResource.java');
+    if(this.storage == 'postgres') {
+      this.template('src/main/java/package/web/rest/_AuditEventsResource.java', javaDir + 'web/rest/AuditEventsResource.java');
+    } else {
+      this.template('src/main/java/package/web/rest/_AuditEventsResource-mongo.java', javaDir + 'web/rest/AuditEventsResource.java');
+    }
     this.template('src/main/java/package/web/rest/_LoggersResource.java', javaDir + 'web/rest/LoggersResource.java');
     this.template('src/main/java/package/web/rest/_UsersResource.java', javaDir + 'web/rest/UsersResource.java');
     this.template('src/main/java/package/web/rest/_AbstractRestResource.java', javaDir + 'web/rest/AbstractRestResource.java');
+    this.template('src/main/java/package/web/rest/_EntityNotFoundException.java', javaDir + 'web/rest/EntityNotFoundException.java');
     this.template('src/main/java/package/web/rest/_RestError.java', javaDir + 'web/rest/RestError.java');
 
     this.template('src/main/java/package/web/servlet/_package-info.java', javaDir + 'web/servlet/package-info.java');
@@ -245,6 +296,7 @@ JhipsterGenerator.prototype.app = function app() {
 
     this.config.set('baseName', this.baseName);
     this.config.set('packageName', this.packageName);
+    this.config.set('storage', this.storage);
     this.config.set('packageFolder', packageFolder);
 };
 
@@ -252,3 +304,15 @@ JhipsterGenerator.prototype.projectfiles = function projectfiles() {
     this.copy('editorconfig', '.editorconfig');
     this.copy('jshintrc', '.jshintrc');
 };
+
+function removefile(file) {
+    if (shelljs.test('-f', file)) {
+        shelljs.rm(file);
+    }
+}
+
+function removefolder(folder) {
+    if (shelljs.test('-d', folder)) {
+        shelljs.rm("-rf", folder);
+    }
+}

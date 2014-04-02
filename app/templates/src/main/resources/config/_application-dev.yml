@@ -1,6 +1,6 @@
 spring:
     profiles: dev
-
+<% if (storage == 'postgres') { %>
     jpa:
         database-platform: <%=packageName%>.hibernate.CustomPostgreSQLDialect
         database: POSTGRESQL
@@ -12,14 +12,18 @@ spring:
             naming-strategy: org.hibernate.cfg.EJB3NamingStrategy
         properties:
             hibernate.generate_statistics: true
-
+<% } %><% if (storage == 'mongo') { %>
+    data:
+        mongodb:
+          uri: mongodb://localhost/<%= _.underscored(baseName) %>
+<% } %>
     thymeleaf:
         mode: XHTML
         cache: false
-
+<% if (storage == 'postgres') { %>
 database:
     dataSourceClassName: org.postgresql.ds.PGSimpleDataSource
-    url: postgres://<%= _.underscored(baseName) %>:<%= _.underscored(baseName) %>@localhost:5432/<%= _.underscored(baseName) %>
+    url: postgres://<%= _.underscored(baseName) %>:<%= _.underscored(baseName) %>@localhost:5432/<%= _.underscored(baseName) %><% } %>
 
 metrics:
     jmx.enabled: true

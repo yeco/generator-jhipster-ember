@@ -13,7 +13,6 @@ import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.io.Serializable;
 
@@ -109,4 +108,5 @@ public abstract class AbstractRestResource<E extends Resource<ID>, ID extends Se
         final RestError error = RestError.METHOD_NOT_ALLOWED_ERROR;
         error.setMessage(e.getMessage());
         return error;
-    }}
+    }
+}
