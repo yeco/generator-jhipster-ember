@@ -9,7 +9,7 @@ grunt build
 git add -A .
 
 echo '----> Bumping version...'
-grunt bump:minor
+grunt bump-only:minor
 
 VERSION=$(awk '/version: (.*)$/ {print $2}' VERSION)
 echo '----> Build version' $VERSION
