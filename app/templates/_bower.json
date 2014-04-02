@@ -2,9 +2,9 @@
   "name": "<%= _.camelize(baseName) %>",
   "version": "0.0.0",
   "dependencies": {
-    "ember": "1.4.0",
+    "ember": "1.5.0",
     "ember-data": "1.0.0-beta.7",
-    "bootstrap": "~3.0.3",
+    "bootstrap": "~3.1.1",
     "ember-addons.bs_for_ember": "0.6.1",
     "momentjs": "~2.5.1",
     "ember-simple-auth": "0.2.0"
@@ -13,6 +13,6 @@
     "ember-mocha-adapter": "0.1.2"
   },
   "resolutions": {
-      "ember": "1.4.0"
+      "ember": "1.5.0"
   }
 }
