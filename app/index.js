@@ -93,7 +93,6 @@ JhipsterGenerator.prototype.app = function app() {
     this.copy('Procfile', 'Procfile');
     this.copy('VERSION', 'VERSION');
     this.copy('build.sh', 'build.sh');
-    this.copy('release.sh', 'release.sh');
     this.copy('gradle.properties', 'gradle.properties');
 
     var packageFolder = this.packageName.replace(/\./g, '/');
