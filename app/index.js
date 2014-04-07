@@ -287,6 +287,10 @@ JhipsterGenerator.prototype.app = function app() {
     this.copy(webappDir + 'templates/audit_event.hbs', webappDir + 'templates/audit_event.hbs');
     this.template(webappDir + 'templates/partials/_navigation.hbs', webappDir + 'templates/partials/navigation.hbs');
 
+    //Images
+	this.copy(webappDir + 'images/logo.png', webappDir + 'images/logo.png');
+
+
     // Create Test Javascript files
     var testJsDir = 'src/test/javascript/';
     this.mkdir(testJsDir);
