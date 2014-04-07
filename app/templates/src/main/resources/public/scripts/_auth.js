@@ -21,7 +21,7 @@ Ember.Application.initializer({
             }.property('username')
         });
 
-        container.register('authenticators:custom', JhipsterEmber.CustomAuthenticator);
+        container.register('authenticators:custom', <%= _.classify(appname) %>.CustomAuthenticator);
 
         Ember.SimpleAuth.setup(container, application, options);
     }
