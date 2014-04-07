@@ -39,7 +39,7 @@ JhipsterGenerator.prototype.askFor = function askFor() {
         '           \\_|_| /_/--\\  \\_\\/  /_/--\\     |_|_/ |_|__  \\_\\/  _)_)       \n' +
         '\n'));
 
-    console.log('\nWelcome to the Jhipster NG Generator\n\n');
+    console.log('\nWelcome to the Jhipster Ember Generator\n\n');
 
     var prompts = [
         {
